@@ -1,59 +1,59 @@
-import { Reagents } from '../Interface/IReagents';
+import { Reagents } from '../interface/IReagents';
 import { Product } from './Product';
 export class Reagent extends Product implements Reagents {
-    nombre: string;
-    cantidad: number;
-    unidad: string;
-    fechaCaducidad: Date;
-    proveedor: string;
-    tipo: string;
+    reagentName : string;
+    reagentQuantity: number;
+    reagentUnit: string;
+    reagentExpirationDate: Date;
+    reagentSupplier: string;
+    reagentType: string;
 
-    constructor(id: number, nombre: string, cantidad: number, unidad: string, fechaCaducidad: Date, proveedor: string, tipo: string) {
-        super(id);
-        this.nombre = nombre;
-        this.cantidad = cantidad;
-        this.unidad = unidad;
-        this.fechaCaducidad = fechaCaducidad;
-        this.proveedor = proveedor;
-        this.tipo = tipo;
+   // Constructor
+    constructor(productId: number, reagentName: string, reagentQuantity: number, reagentUnit: string, reagentExpirationDate: Date, reagentSupplier: string, reagentType: string) {
+        super(productId); // Llamar al constructor de la clase padre (Product)
+        this.reagentName = reagentName;
+        this.reagentQuantity = reagentQuantity;
+        this.reagentUnit = reagentUnit;
+        this.reagentExpirationDate = reagentExpirationDate;
+        this.reagentSupplier = reagentSupplier;
+        this.reagentType = reagentType;
     }
-
     // Getters
-    public getNombre(): string {
-        return this.nombre;
+    public getReagentName(): string {
+        return this.reagentName;
     }
-    public getCantidad(): number {
-        return this.cantidad;
+    public getReagentQuantity(): number {
+        return this.reagentQuantity;
+    }           
+    public getReagentUnit(): string {
+        return this.reagentUnit;
     }
-    public getUnidad(): string {
-        return this.unidad;
+    public getReagentExpirationDate(): Date {
+        return this.reagentExpirationDate;
     }
-    public getFechaCaducidad(): Date {
-        return this.fechaCaducidad;
+    public getReagentSupplier(): string {
+        return this.reagentSupplier;
     }
-    public getProveedor(): string {
-        return this.proveedor;
-    }   
-    public getTipo(): string {
-        return this.tipo;
+    public getReagentType(): string {
+        return this.reagentType;
     }
     // Setters
-    public setNombre(nombre: string): void {
-        this.nombre = nombre;
+    public setReagentName(reagentName: string): void {
+        this.reagentName = reagentName;
     }
-    public setCantidad(cantidad: number): void {
-        this.cantidad = cantidad;
+    public setReagentQuantity(reagentQuantity: number): void {
+        this.reagentQuantity = reagentQuantity;
     }
-    public setUnidad(unidad: string): void {
-        this.unidad = unidad;
+    public setReagentUnit(reagentUnit: string): void {
+        this.reagentUnit = reagentUnit;
     }
-    public setFechaCaducidad(fechaCaducidad: Date): void {
-        this.fechaCaducidad = fechaCaducidad;
+    public setReagentExpirationDate(reagentExpirationDate: Date): void {
+        this.reagentExpirationDate = reagentExpirationDate;
     }
-    public setProveedor(proveedor: string): void {
-        this.proveedor = proveedor;
+    public setReagentSupplier(reagentSupplier: string): void {
+        this.reagentSupplier = reagentSupplier;
     }
-    public setTipo(tipo: string): void {
-        this.tipo = tipo;
+    public setReagentType(reagentType: string): void {
+        this.reagentType = reagentType;
     }
 }

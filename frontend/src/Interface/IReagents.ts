@@ -1,11 +1,11 @@
 
 
 export interface Reagents {
-    nombre: string;
-    cantidad: number;
-    unidad: string;
-    fechaCaducidad: Date;
-    proveedor: string;
-    tipo: string;
+  reagentName : string;
+  reagentQuantity: number;
+  reagentUnit: string;
+  reagentExpirationDate: Date;
+  reagentSupplier: string;
+  reagentType: string;
   }
   
