@@ -1,8 +1,9 @@
+import { IHistorical } from "../interface/IHistorical";
 
 
 
 //Clase del historial de acciones de los usuarios
-export class Historical{
+export class Historical implements IHistorical {
 
     HistoricalId:number;
     HistoricalUserId:number;
