@@ -1,5 +1,4 @@
-
-import { IMovement } from "../interface/Imovement"; 
+import { IMovement } from "../interface/IMovement";
 
 export class Movement implements IMovement {
   MovementId: number;

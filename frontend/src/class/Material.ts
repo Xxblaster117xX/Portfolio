@@ -1,12 +1,11 @@
-import { Product } from "./Product";
+
 import { IMaterial } from "../interface/IMaterial";
-export class Material extends Product implements IMaterial{
+export class Material  implements IMaterial{
     materialId:number;
     materialName:string;
 
     //Constructor
-    constructor( productId: number,materialId:number, materialName:string ){
-      super(productId); // Llama al constructor de la clase base Product
+    constructor(materialId:number, materialName:string ){
       this.materialId = materialId;
       this.materialName = materialName;
     }

@@ -1,7 +1,8 @@
 import { Reagents } from '../interface/IReagents';
-import { Product } from './Product';
-export class Reagent extends Product implements Reagents {
- reagentCas:string;
+
+export class Reagent  implements Reagents {
+  reagentId: number;
+  reagentCas:string;
   reagentName : string;
   reagentQuantity: number;
   reagentUnit: number;
@@ -11,9 +12,9 @@ export class Reagent extends Product implements Reagents {
   reagentType: string;
   reagentFDS: string 
    // Constructor
-  constructor( productId: number, reagentCas: string, reagentName: string, reagentQuantity: number, reagentUnit: number, reagentAddDate: Date, reagentExpirationDate: Date, reagentSupplier: string, reagentType: string, reagentFDS: string
+  constructor(reagentId:number, reagentCas: string, reagentName: string, reagentQuantity: number, reagentUnit: number, reagentAddDate: Date, reagentExpirationDate: Date, reagentSupplier: string, reagentType: string, reagentFDS: string
   ) {
-    super(productId); // Llama al constructor de la clase base Product
+    this.reagentId=reagentId;
     this.reagentCas = reagentCas;
     this.reagentName = reagentName;
     this.reagentQuantity = reagentQuantity;
@@ -26,6 +27,9 @@ export class Reagent extends Product implements Reagents {
   }
 
   // Getters
+  getReagentId():number{
+  return this.reagentId;
+  }
   getReagentCas(): string {
     return this.reagentCas;
   }
@@ -63,6 +67,9 @@ export class Reagent extends Product implements Reagents {
   }
 
   // Setters
+  setReagentId(reagentId:number):void{
+  this.reagentId=reagentId;
+  }
   setReagentCas(reagentCas: string): void {
     this.reagentCas = reagentCas;
   }

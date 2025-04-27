@@ -1,6 +1,7 @@
 
 
 export interface Reagents {
+  reagentId:number;
   reagentCas:string;
   reagentName : string;
   reagentQuantity: number;
