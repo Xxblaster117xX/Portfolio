@@ -9,13 +9,15 @@ export  class UserClass implements IUser {
     userGmail: string;
     userPassword: string;
     rol: rol ;
+    isVerified:boolean =false;
 
-   public constructor(userId: number, userName: string, userGmail: string, userPassword: string, rol: rol) { 
+   public constructor(userId: number, userName: string, userGmail: string, userPassword: string, rol: rol, isVerified:boolean) { 
         this.userId =   userId;
         this.userName = userName;
         this.userGmail = userGmail;
         this.userPassword = userPassword;
         this.rol = rol;
+        this.isVerified = isVerified;
     }
    
 //getters
@@ -34,6 +36,9 @@ export  class UserClass implements IUser {
     public getRol(): rol {
         return this.rol;
     }
+    public getIsVerified(): boolean {
+        return this.isVerified;
+    }
 //setters
     public setUserId(userId: number): void {
         this.userId = userId;
@@ -49,6 +54,9 @@ export  class UserClass implements IUser {
     }
     public setRol(rol: rol): void {
         this.rol = rol;
+    }
+    public setIsVerified(isVerified: boolean): void {
+        this.isVerified = isVerified;
     }
     // Método para mostrar la información del usuario
     public showUser(): string {

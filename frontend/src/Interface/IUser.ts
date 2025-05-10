@@ -7,5 +7,6 @@ export interface IUser {
     userGmail: string;
     userPassword: string;
     rol: rol; 
+    isVerified: boolean;
   }
   

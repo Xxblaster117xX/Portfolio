@@ -1,14 +1,10 @@
-import { app, BrowserWindow, ipcMain } from 'electron'; // Importación correcta para Electron
-import path from 'path'; // Importación para manejo de rutas
-import Database from 'better-sqlite3'; // Importación de sqlite3
+import { app, BrowserWindow, ipcMain } from 'electron';
+import path from 'path';
+import Database from 'better-sqlite3';
 
-// Ruta de la base de datos SQLite
-const dbPath = path.join(__dirname, 'almacen.db');
-
-// Crear o abrir la base de datos
+const dbPath = path.resolve(__dirname, '../../almacen.db');
 export const db = new Database(dbPath, { verbose: console.log });
 
-// Crear las tablas si no existen
 const crearTablas = () => {
   db.prepare(`
     CREATE TABLE IF NOT EXISTS materials (
@@ -38,7 +34,8 @@ const crearTablas = () => {
       user_name TEXT NOT NULL,
       user_gmail TEXT NOT NULL UNIQUE,
       user_password TEXT NOT NULL,
-      rol TEXT NOT NULL
+      rol TEXT NOT NULL,
+      isVerified BOOLEAN DEFAULT FALSE
     );
   `).run();
 
@@ -56,6 +53,15 @@ const crearTablas = () => {
   `).run();
 
   db.prepare(`
+    CREATE TABLE IF NOT EXISTS productos (
+      id INTEGER PRIMARY KEY,
+      nombre TEXT NOT NULL,
+      cantidad REAL NOT NULL,
+      precio REAL NOT NULL
+    );
+  `).run();
+
+  db.prepare(`
     CREATE TABLE IF NOT EXISTS historical (
       historical_id INTEGER PRIMARY KEY,
       historical_user_id INTEGER NOT NULL,
@@ -67,37 +73,50 @@ const crearTablas = () => {
   `).run();
 };
 
-// Crear ventana de Electron
 function createWindow() {
   const win = new BrowserWindow({
     width: 1000,
     height: 700,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
     },
   });
 
-  win.loadURL('http://localhost:5173'); // Cargar la aplicación React
+  win.loadURL('http://localhost:5173');
 }
 
 app.whenReady().then(() => {
-  crearTablas(); // Crear las tablas al iniciar
-  createWindow(); // Crear la ventana de Electron
+  try {
+    crearTablas();
+    createWindow();
 
-  // Enviar productos al frontend de React cuando se soliciten
-  ipcMain.handle('get-productos', () => {
-    return db.prepare('SELECT * FROM productos').all();
-  });
+    ipcMain.handle('get-productos', () => {
+      return db.prepare('SELECT * FROM productos').all();
+    });
 
-  // Agregar un producto desde el frontend
-  ipcMain.handle('add-producto', (event, nombre, cantidad, precio) => {
-    const stmt = db.prepare('INSERT INTO productos (nombre, cantidad, precio) VALUES (?, ?, ?)');
-    stmt.run(nombre, cantidad, precio);
-  });
+    ipcMain.handle('add-producto', (event, nombre, cantidad, precio) => {
+      if (!nombre || typeof nombre !== 'string') {
+        throw new Error('El nombre del producto es inválido.');
+      }
+      if (typeof cantidad !== 'number' || cantidad <= 0) {
+        throw new Error('La cantidad debe ser un número positivo.');
+      }
+      if (typeof precio !== 'number' || precio <= 0) {
+        throw new Error('El precio debe ser un número positivo.');
+      }
+
+      const stmt = db.prepare('INSERT INTO productos (nombre, cantidad, precio) VALUES (?, ?, ?)');
+      stmt.run(nombre, cantidad, precio);
+    });
+  } catch (error) {
+    console.error('Error al inicializar la aplicación:', error);
+    app.quit();
+  }
 });
 
 app.on('window-all-closed', () => {
+  db.close();
   if (process.platform !== 'darwin') app.quit();
 });
 

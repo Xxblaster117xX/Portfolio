@@ -1,11 +1,16 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './MainPage.tsx'
-import './index.css'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import MainPage from './components/MainPage';
+import LoginForm from './components/LoginForm';
+import RegisterForm from './components/RegisterForm';
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+export default function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<MainPage />} /> {/* Pantalla principal */}
+        <Route path="/LoginForm" element={<LoginForm />} /> {/* Pantalla de inicio de sesión */}
+        <Route path="/RegisterForm" element={<RegisterForm />} /> {/* Pantalla de registro */}
+      </Routes>
+    </Router>
+  );
+}

@@ -32,7 +32,7 @@
 .nav-buttons {
   display: flex;
   gap: 1rem;
-  margin-right: 100px; /* Mueve los botones más hacia la izquierda */
+  margin-right: 100px; 
 }
 
 .nav-buttons button {

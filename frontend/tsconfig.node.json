@@ -1,24 +1,16 @@
 {
   "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-    "target": "ES2022",
-    "lib": ["ES2023"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "noEmit": true,
-
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "target": "ES2022", // Versión de JavaScript a generar
+    "lib": ["ES2023"], // Librerías compatibles
+    "module": "ESNext", // Usar módulos ES
+    "outDir": "./dist", // Carpeta donde se generarán los archivos compilados
+    "rootDir": "./", // Carpeta raíz de los archivos fuente
+    "strict": true, // Habilitar comprobaciones estrictas
+    "esModuleInterop": true, // Habilitar interoperabilidad con CommonJS
+    "moduleResolution": "node", // Resolver módulos como Node.js
+    "skipLibCheck": true, // Omitir comprobación de tipos en archivos de definición
+    "forceConsistentCasingInFileNames": true // Asegurar consistencia en nombres de archivos
   },
-  "include": ["vite.config.ts"]
+  "include": ["main/**/*.ts", "backend/**/*.ts"], // Incluir archivos del backend y Electron
+  "exclude": ["node_modules"] // Excluir dependencias
 }

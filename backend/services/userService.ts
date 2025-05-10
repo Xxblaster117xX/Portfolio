@@ -1,80 +1,114 @@
 import { db } from '../database/connection'; // Importa la conexión a la base de datos
-import bcrypt from 'bcrypt';
+import bcryptjs from 'bcryptjs';
+
+// Interfaz para representar un usuario
+export interface Usuario {
+  user_id: number;
+  user_name: string;
+  user_gmail: string;
+  user_password: string;
+  rol: string;
+  isVerified: boolean;
+}
 
 // Función para verificar si una contraseña es fuerte
 const verificarContraseñaFuerte = (password: string): boolean => {
-  // La contraseña debe tener al menos 8 caracteres, una letra, un número y un carácter especial
   const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   return regex.test(password);
 };
 
 // Función para encriptar contraseñas
 const encriptarContraseña = async (password: string): Promise<string> => {
-  const salt = await bcrypt.genSalt(10);
-  return bcrypt.hash(password, salt);
+  const salt = await bcryptjs.genSalt(10);
+  return bcryptjs.hash(password, salt);
+};
+
+// Función para verificar si el correo electrónico tiene un formato válido
+const verificarCorreoValido = (email: string): boolean => {
+  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return regex.test(email);
+};
+
+// Verificar si un usuario está verificado
+export const verificarUsuario = (userGmail: string) => {
+  const stmt = db.prepare(`
+    UPDATE users SET isVerified = ? WHERE user_gmail = ?
+  `);
+  const result = stmt.run(true, userGmail);
+  if (result.changes === 0) {
+    throw new Error('No se encontró el usuario para verificar.');
+  }
 };
 
 // Insertar un nuevo usuario
 export const insertarUsuario = async (userName: string, userGmail: string, userPassword: string, rol: string) => {
-  // Verificar que el correo no esté registrado previamente
+  if (!verificarCorreoValido(userGmail)) {
+    throw new Error('El correo electrónico no tiene un formato válido.');
+  }
+
   const usuarioExistente = obtenerUsuarioPorGmail(userGmail);
   if (usuarioExistente) {
     throw new Error('El correo electrónico ya está registrado.');
-  } 
-
-  // Verificar que la contraseña sea fuerte
-  if (!verificarContraseñaFuerte(userPassword)) {
-    throw new Error('La contraseña debe tener al menos 8 caracteres, una letra, un número y un carácter especial.');
   }
 
-  // Encriptar la contraseña
+  if (!verificarContraseñaFuerte(userPassword)) {
+    throw new Error(
+      'La contraseña debe tener al menos 8 caracteres, incluir una letra, un número y un carácter especial.'
+    );
+  }
+
   const hashedPassword = await encriptarContraseña(userPassword);
 
-  // Insertar el usuario en la base de datos
   const stmt = db.prepare(`
-    INSERT INTO users (user_name, user_gmail, user_password, rol)
-    VALUES (?, ?, ?, ?)
+    INSERT INTO users (user_name, user_gmail, user_password, rol, isVerified)
+    VALUES (?, ?, ?, ?, ?)
   `);
-  stmt.run(userName, userGmail, hashedPassword, rol);
+  stmt.run(userName, userGmail, hashedPassword, rol, false);
 };
 
 // Obtener todos los usuarios
-export const obtenerUsuarios = () => {
+export const obtenerUsuarios = (): Usuario[] => {
   const stmt = db.prepare(`SELECT * FROM users`);
-  return stmt.all();
+  return stmt.all() as Usuario[];
 };
 
 // Obtener un usuario por su Gmail
-export const obtenerUsuarioPorGmail = (userGmail: string) => {
+export const obtenerUsuarioPorGmail = (userGmail: string): Usuario | undefined => {
   const stmt = db.prepare(`SELECT * FROM users WHERE user_gmail = ?`);
-  return stmt.get(userGmail);
+  return stmt.get(userGmail) as Usuario | undefined;
 };
 
 // Actualizar la contraseña de un usuario
 export const actualizarContraseña = async (userId: number, nuevaContraseña: string) => {
   if (!verificarContraseñaFuerte(nuevaContraseña)) {
-    throw new Error('La contraseña debe tener al menos 8 caracteres, una letra, un número y un carácter especial.');
+    throw new Error(
+      'La contraseña debe tener al menos 8 caracteres, incluir una letra, un número y un carácter especial.'
+    );
   }
 
-  // Encriptar la nueva contraseña
   const hashedPassword = await encriptarContraseña(nuevaContraseña);
 
-  // Actualizar la contraseña en la base de datos
   const stmt = db.prepare(`
     UPDATE users SET user_password = ? WHERE user_id = ?
   `);
-  stmt.run(hashedPassword, userId);
+  const result = stmt.run(hashedPassword, userId);
+  if (result.changes === 0) {
+    throw new Error('No se encontró el usuario para actualizar la contraseña.');
+  }
 };
 
-// Función para eliminar a un usuario
+// Eliminar un usuario
 export const eliminarUsuario = (userId: number) => {
   const stmt = db.prepare(`
     DELETE FROM users WHERE user_id = ?
   `);
-  stmt.run(userId);
+  const result = stmt.run(userId);
+  if (result.changes === 0) {
+    throw new Error('No se encontró el usuario para eliminar.');
+  }
 };
 
-// Verificar si la contraseña ingresada coincide con la de la base de datos
+// Verificar la contraseña de un usuario
 export const verificarContraseña = async (userGmail: string, password: string): Promise<boolean> => {
   const usuario = obtenerUsuarioPorGmail(userGmail);
 
@@ -82,19 +116,9 @@ export const verificarContraseña = async (userGmail: string, password: string):
     throw new Error('Usuario no encontrado');
   }
 
-  const esValida = await bcrypt.compare(password, usuario.user_password);
-  return esValida;
-};
+  if (!usuario.isVerified) {
+    throw new Error('El usuario no ha completado la verificación.');
+  }
 
-// Función para verificar si el correo electrónico tiene un formato válido
-const verificarCorreoValido = (email: string): boolean => {
-  // Expresión regular para validar el formato del correo
-  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  return regex.test(email);
-};
-
-// Función para verificar si el correo electrónico ya está registrado
-export const verificarCorreoRegistrado = (email: string): boolean => {
-  const usuario = obtenerUsuarioPorGmail(email);
-  return usuario ? true : false;
+  return bcryptjs.compare(password, usuario.user_password);
 };
