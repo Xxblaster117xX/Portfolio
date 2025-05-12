@@ -1,11 +1,16 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
+import { fileURLToPath } from 'url';
 import path from 'path';
-import UserService from '../dist/backend/services/userService.js'; // Cambié la importación aquí
+import UserService from '../dist/backend/services/userService.js'; 
 import {
   enviarCodigoVerificacion,
   enviarCorreoRestablecerContrasena,
   enviarCorreoNotificacion,
 } from '../dist/backend/services/emailService.js';
+
+// Define __dirname manualmente para módulos ES6
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 let mainWindow;
 const verificationCodes = new Map(); // Almacena los códigos de verificación
@@ -31,7 +36,7 @@ ipcMain.handle('registrar-usuario', async (event, { userName, userGmail, userPas
     const codigo = Math.floor(100000 + Math.random() * 900000).toString();
     verificationCodes.set(userGmail, codigo);
     await enviarCodigoVerificacion(userGmail, codigo);
-    await UserService.insertarUsuario(userName, userGmail, userPassword, rol); // Cambié esta línea
+    await UserService.insertarUsuario(userName, userGmail, userPassword, rol);
     return { success: true, message: 'Usuario registrado. Verifica tu correo.' };
   } catch (error) {
     console.error('Error en registrar-usuario:', error);
@@ -44,7 +49,7 @@ ipcMain.handle('verificar-codigo', (event, { userGmail, codigo }) => {
   const storedCode = verificationCodes.get(userGmail);
   if (storedCode === codigo) {
     verificationCodes.delete(userGmail);
-    UserService.verificarUsuario(userGmail); // Cambié esta línea
+    UserService.verificarUsuario(userGmail);
     return { success: true, message: 'Verificación exitosa.' };
   } else {
     return { success: false, message: 'Código de verificación incorrecto.' };
@@ -54,7 +59,7 @@ ipcMain.handle('verificar-codigo', (event, { userGmail, codigo }) => {
 // Manejar el inicio de sesión
 ipcMain.handle('iniciar-sesion', async (event, { userGmail, userPassword }) => {
   try {
-    const esValido = await UserService.verificarContraseña(userGmail, userPassword); // Cambié esta línea
+    const esValido = await UserService.verificarContraseña(userGmail, userPassword);
     if (esValido) {
       return { success: true, message: 'Inicio de sesión exitoso.' };
     } else {

@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../styles/LoginForm.css';
 
 export default function LoginForm() {
   const [userGmail, setUserGmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,13 +24,49 @@ export default function LoginForm() {
     }
   };
 
+  const handleRecoverPassword = () => {
+    alert('Funcionalidad de recuperación de contraseña aún no implementada.');
+  };
+
   return (
-    <form onSubmit={handleLogin}>
-      <h1>Iniciar Sesión</h1>
-      <input type="email" placeholder="Correo" value={userGmail} onChange={(e) => setUserGmail(e.target.value)} required />
-      <input type="password" placeholder="Contraseña" value={userPassword} onChange={(e) => setUserPassword(e.target.value)} required />
-      <button type="submit">Iniciar Sesión</button>
-      {message && <p>{message}</p>}
-    </form>
+    <div className="login-container">
+      <form onSubmit={handleLogin} className="login-form">
+        <h1 className="login-title">Iniciar Sesión</h1>
+        <input
+          type="email"
+          placeholder="Correo"
+          value={userGmail}
+          onChange={(e) => setUserGmail(e.target.value)}
+          className="login-input"
+          required
+        />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={userPassword}
+          onChange={(e) => setUserPassword(e.target.value)}
+          className="login-input"
+          required
+        />
+        <button type="submit" className="login-button">Iniciar Sesión</button>
+        {message && <p className="login-message">{message}</p>}
+        
+        <button
+          type="button"
+          className="login-secondary-button"
+          onClick={handleRecoverPassword}
+        >
+          ¿Olvidaste tu contraseña?
+        </button>
+
+        <button
+          type="button"
+          className="login-secondary-button"
+          onClick={() => navigate('/')}
+        >
+          Volver al inicio
+        </button>
+      </form>
+    </div>
   );
 }

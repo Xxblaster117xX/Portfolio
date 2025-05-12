@@ -1,0 +1,87 @@
+/* General container */
+.register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background-color: #f0f2f5;
+  min-height: 100vh;
+}
+
+/* Forms */
+.register-form,
+.verify-form {
+  background: #ffffff;
+  padding: 30px 24px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Headings */
+.form-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+}
+
+/* Inputs and Selects */
+.form-input,
+.form-select {
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: border 0.2s ease-in-out;
+}
+
+.form-input:focus,
+.form-select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Button */
+.form-button {
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.form-button:hover {
+  background-color: #0056b3;
+}
+
+/* Message */
+.form-message {
+  margin-top: 20px;
+  text-align: center;
+  font-weight: 500;
+  color: #d9534f;
+}
+.home-button {
+  margin-top: 24px;
+  text-align: center;
+  display: inline-block;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.home-button:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+

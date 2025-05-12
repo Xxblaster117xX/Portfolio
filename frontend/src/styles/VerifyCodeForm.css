@@ -1,0 +1,61 @@
+.verify-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f2f5;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.verify-form {
+  background: #ffffff;
+  padding: 30px 24px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.verify-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+}
+
+.verify-input {
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: border 0.2s ease-in-out;
+}
+
+.verify-input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.verify-button {
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.verify-button:hover {
+  background-color: #0056b3;
+}
+
+.verify-message {
+  text-align: center;
+  color: #d9534f;
+  font-weight: 500;
+}
