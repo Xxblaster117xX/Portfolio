@@ -1,13 +1,31 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld('electron', {
-  // Funciones existentes
-  registrarUsuario: (data) => ipcRenderer.invoke('registrar-usuario', data),
-  verificarCodigo: (data) => ipcRenderer.invoke('verificar-codigo', data),
-  iniciarSesion: (data) => ipcRenderer.invoke('iniciar-sesion', data),
+console.log('Preload cargado correctamente');
 
-  // Nuevas funciones para envío de correos
-  enviarCodigoVerificacion: (correo, codigo) => ipcRenderer.invoke('enviar-codigo-verificacion', correo, codigo),
-  enviarCorreoRestablecerContrasena: (correo, enlace) => ipcRenderer.invoke('enviar-correo-reset', correo, enlace),
-  enviarCorreoNotificacion: (correo, mensaje) => ipcRenderer.invoke('enviar-notificacion', correo, mensaje),
+contextBridge.exposeInMainWorld('electron', {
+  registrarUsuario: (data) => {
+    console.log('Llamada a registrarUsuario:', data);
+    return ipcRenderer.invoke('registrar-usuario', data);
+  },
+  verificarCodigo: (data) => {
+    console.log('Llamada a verificarCodigo:', data);
+    return ipcRenderer.invoke('verificar-codigo', data);
+  },
+  iniciarSesion: (data) => {
+    console.log('Llamada a iniciarSesion:', data);
+    return ipcRenderer.invoke('iniciar-sesion', data);
+  },
+
+  enviarCodigoVerificacion: (correo, codigo) => {
+    console.log('Llamada a enviarCodigoVerificacion:', correo, codigo);
+    return ipcRenderer.invoke('enviar-codigo-verificacion', correo, codigo);
+  },
+  enviarCorreoRestablecerContrasena: (correo, enlace) => {
+    console.log('Llamada a enviarCorreoRestablecerContrasena:', correo, enlace);
+    return ipcRenderer.invoke('enviar-correo-reset', correo, enlace);
+  },
+  enviarCorreoNotificacion: (correo, mensaje) => {
+    console.log('Llamada a enviarCorreoNotificacion:', correo, mensaje);
+    return ipcRenderer.invoke('enviar-notificacion', correo, mensaje);
+  },
 });

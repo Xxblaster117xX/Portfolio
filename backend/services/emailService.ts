@@ -1,67 +1,48 @@
 import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
 
-// Crear un transportador para enviar correos
+dotenv.config(); // Carga las variables de entorno desde el archivo .env
+
+// Configura el transportador SMTP con Gmail
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // Usamos el servicio de Gmail. 
+  service: 'gmail',
   auth: {
-    user: 'acarreterog01@santiagoapostol.net', 
-    pass: '19/02/2001' 
+    user: process.env.CORREO_ORIGEN,
+    pass: process.env.CORREO_PASSWORD
   }
 });
 
-// Función para enviar un correo de verificación 
-export const enviarCorreoVerificacion = (correoDestino: string, codigoVerificacion: string) => {
+// Función genérica para enviar correos
+const enviarCorreo = async (correoDestino: string, asunto: string, contenido: string) => {
   const mailOptions = {
-    from: 'acarreterog01@santiagoapostol.net', 
+    from: process.env.CORREO_ORIGEN,
     to: correoDestino,
-    subject: 'Verificación de cuenta',
-    text: `Por favor, utiliza el siguiente código para verificar tu cuenta: ${codigoVerificacion}`
+    subject: asunto,
+    text: contenido
   };
 
-  // Enviar el correo
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log('Error al enviar correo: ', error);
-    } else {
-      console.log('Correo enviado: ' + info.response);
-    }
-  });
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`Correo enviado: ${info.response}`);
+  } catch (error) {
+    console.error('Error al enviar correo:', error);
+    throw error;
+  }
 };
 
-// Función para enviar un correo de restablecimiento de contraseña
-export const enviarCorreoRestablecerContrasena = (correoDestino: string, enlaceRestablecimiento: string) => {
-  const mailOptions = {
-    from: 'acarreterog01@santiagoapostol.net',    
-    to: correoDestino,
-    subject: 'Restablecimiento de contraseña',
-    text: `Para restablecer tu contraseña, por favor haz clic en el siguiente enlace: ${enlaceRestablecimiento}`
-  };
-
-  // Enviar el correo
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log('Error al enviar correo: ', error);
-    } else {
-      console.log('Correo enviado: ' + info.response);
-    }
-  });
+// Enviar código de verificación
+export const enviarCodigoVerificacion = async (correoDestino: string, codigoVerificacion: string) => {
+  const mensaje = `Por favor, utiliza el siguiente código para verificar tu cuenta: ${codigoVerificacion}`;
+  await enviarCorreo(correoDestino, 'Verificación de cuenta', mensaje);
 };
 
-// Función para enviar un correo de notificación (por ejemplo, al registrar un nuevo usuario)
-export const enviarCorreoNotificacion = (correoDestino: string, mensaje: string) => {
-  const mailOptions = {
-    from: 'acarreterog01@santiagoapostol.net', 
-    to: correoDestino,
-    subject: 'Notificación importante',
-    text: mensaje
-  };
+// Enviar enlace de restablecimiento de contraseña
+export const enviarCorreoRestablecerContrasena = async (correoDestino: string, enlaceRestablecimiento: string) => {
+  const mensaje = `Para restablecer tu contraseña, haz clic en el siguiente enlace: ${enlaceRestablecimiento}`;
+  await enviarCorreo(correoDestino, 'Restablecimiento de contraseña', mensaje);
+};
 
-  // Enviar el correo
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log('Error al enviar correo: ', error);
-    } else {
-      console.log('Correo enviado: ' + info.response);
-    }
-  });
+// Enviar notificación genérica
+export const enviarCorreoNotificacion = async (correoDestino: string, mensaje: string) => {
+  await enviarCorreo(correoDestino, 'Notificación importante', mensaje);
 };

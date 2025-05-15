@@ -1,26 +1,22 @@
-import { db } from '../database/connection.js'; // Asegúrate de que la conexión está exportada correctamente
+import { db } from '../database/connection.js';
 import bcryptjs from 'bcryptjs';
 
 class UserService {
-  // Verifica si una contraseña es fuerte
   static verificarContraseñaFuerte(password) {
     const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return regex.test(password);
   }
 
-  // Encripta la contraseña
   static async encriptarContraseña(password) {
     const salt = await bcryptjs.genSalt(10);
     return bcryptjs.hash(password, salt);
   }
 
-  // Valida el formato del correo
   static verificarCorreoValido(email) {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return regex.test(email);
   }
 
-  // Verifica un usuario (marca como verificado)
   static async verificarUsuario(userGmail) {
     try {
       const result = await db.run(
@@ -37,8 +33,7 @@ class UserService {
     }
   }
 
-  // Inserta un nuevo usuario
-static async insertarUsuario(userName, userGmail, userPassword, rol) {
+  static async insertarUsuario(userName, userGmail, userPassword, rol) {
     try {
       if (!this.verificarCorreoValido(userGmail)) {
         throw new Error('El correo electrónico no tiene un formato válido.');
@@ -66,7 +61,6 @@ static async insertarUsuario(userName, userGmail, userPassword, rol) {
     }
   }
 
-  // Obtiene todos los usuarios
   static async obtenerUsuarios() {
     try {
       return await db.all(`SELECT * FROM users`);
@@ -76,7 +70,6 @@ static async insertarUsuario(userName, userGmail, userPassword, rol) {
     }
   }
 
-  // Obtiene un usuario por correo
   static async obtenerUsuarioPorGmail(userGmail) {
     try {
       return await db.get(`SELECT * FROM users WHERE user_gmail = ?`, [userGmail]);
@@ -86,7 +79,6 @@ static async insertarUsuario(userName, userGmail, userPassword, rol) {
     }
   }
 
-  // Actualiza la contraseña de un usuario
   static async actualizarContraseña(userId, nuevaContraseña) {
     try {
       if (!this.verificarContraseñaFuerte(nuevaContraseña)) {
@@ -108,7 +100,6 @@ static async insertarUsuario(userName, userGmail, userPassword, rol) {
     }
   }
 
-  // Elimina un usuario
   static async eliminarUsuario(userId) {
     try {
       const result = await db.run(`DELETE FROM users WHERE user_id = ?`, [userId]);
@@ -122,26 +113,38 @@ static async insertarUsuario(userName, userGmail, userPassword, rol) {
     }
   }
 
-  // Verifica contraseña al hacer login
   static async verificarContraseña(userGmail, password) {
     try {
       const usuario = await this.obtenerUsuarioPorGmail(userGmail);
 
-      if (!usuario) {
-        throw new Error('Usuario no encontrado');
+      if (!usuario || !usuario.isVerified) {
+        throw new Error('Correo o contraseña incorrectos.');
       }
 
-      if (!usuario.isVerified) {
-        throw new Error('El usuario no ha completado la verificación.');
+      const coincide = await bcryptjs.compare(password, usuario.user_password);
+
+      if (!coincide) {
+        throw new Error('Correo o contraseña incorrectos.');
       }
 
-      return await bcryptjs.compare(password, usuario.user_password);
+      return true;
     } catch (error) {
       console.error('Error al verificar contraseña:', error);
       throw error;
     }
   }
+
+  // NUEVO: Verifica si el usuario existe y está verificado
+  static async existeUsuarioVerificado(userGmail) {
+    const usuario = await this.obtenerUsuarioPorGmail(userGmail);
+    return !!usuario && usuario.isVerified;
+  }
+
+  // NUEVO: Verifica si ya existe alguien registrado (sin importar si está verificado)
+  static async usuarioYaRegistrado(userGmail) {
+    const usuario = await this.obtenerUsuarioPorGmail(userGmail);
+    return !!usuario;
+  }
 }
 
-// Exporta la clase UserService para poder usarla en otros módulos
 export default UserService;

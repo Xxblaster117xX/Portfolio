@@ -1,8 +1,13 @@
+// VerifyCodeForm.tsx
 import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import '../styles/VerifyCodeForm.css';
 
 export default function VerifyCodeForm() {
-  const [userGmail, setUserGmail] = useState('');
+  const location = useLocation();
+  const navigate = useNavigate();
+  const userGmail = location.state?.userGmail ?? ''; // 👈 viene del registro
+
   const [codigo, setCodigo] = useState('');
   const [message, setMessage] = useState('');
 
@@ -12,7 +17,7 @@ export default function VerifyCodeForm() {
       const response = await window.electron.verificarCodigo({ userGmail, codigo });
       if (response.success) {
         alert('Verificación exitosa. Ahora puedes iniciar sesión.');
-        setMessage('');
+        navigate('/'); // redirige al login
       } else {
         setMessage(response.message);
       }
@@ -26,14 +31,6 @@ export default function VerifyCodeForm() {
     <div className="verify-container">
       <form onSubmit={handleVerify} className="verify-form">
         <h1 className="verify-title">Verificar Código</h1>
-        <input
-          className="verify-input"
-          type="email"
-          placeholder="Correo"
-          value={userGmail}
-          onChange={(e) => setUserGmail(e.target.value)}
-          required
-        />
         <input
           className="verify-input"
           type="text"
