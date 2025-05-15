@@ -1,6 +1,9 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import express from 'express'; // <-- IMPORTANTE
+//import forgotPasswordRouter from '../dist/backend/services/forgot-password.js';
+//import resetPasswordRouter from '../dist/backend/services/reset-password.js';
 import UserService from '../dist/backend/services/userService.js';
 import {
   enviarCodigoVerificacion,
@@ -39,17 +42,17 @@ function createMainWindow() {
   });
 }
 
-// Función para probar el envío de correo al iniciar
-async function pruebaEnvioCorreo() {
-  try {
-    const testEmail = 'acarreterog01@santiagoapostol.net';  // Cambia aquí por tu email de prueba
-    const codigoPrueba = '123456';
-    console.log('Probando envío de correo...');
-    await enviarCodigoVerificacion(testEmail, codigoPrueba);
-    console.log('Correo de prueba enviado correctamente');
-  } catch (error) {
-    console.error('Error enviando correo de prueba:', error);
-  }
+// Servidor Express para API
+function crearServidorAPI() {
+  const expressApp = express();
+  expressApp.use(express.json());
+
+  expressApp.use('/api', forgotPasswordRouter);
+  expressApp.use('/api', resetPasswordRouter);
+
+  expressApp.listen(3001, () => {
+    console.log('Servidor Express escuchando en http://localhost:3001');
+  });
 }
 
 const gotTheLock = app.requestSingleInstanceLock();
@@ -64,8 +67,8 @@ if (!gotTheLock) {
     }
   });
 
-  app.whenReady().then(async () => {
-    await pruebaEnvioCorreo();  // <-- Ejecuta la prueba justo al iniciar
+  app.whenReady().then(() => {
+    crearServidorAPI(); // <-- Inicia el servidor Express
     createMainWindow();
   });
 
@@ -77,6 +80,28 @@ if (!gotTheLock) {
     if (mainWindow === null) createMainWindow();
   });
 }
+
+
+
+
+// Función para probar el envío de correo al iniciar
+async function pruebaEnvioCorreo() {
+  try {
+    const testEmail = 'acarreterog01@santiagoapostol.net';  // Cambia aquí por tu email de prueba
+    const codigoPrueba = '123456';
+    console.log('Probando envío de correo...');
+    await enviarCodigoVerificacion(testEmail, codigoPrueba);
+    console.log('Correo de prueba enviado correctamente');
+  } catch (error) {
+    console.error('Error enviando correo de prueba:', error);
+  }
+}
+
+// Removed duplicate declaration of gotTheLock and merged logic
+app.whenReady().then(async () => {
+  await pruebaEnvioCorreo();  // <-- Ejecuta la prueba justo al iniciar
+  createMainWindow();
+});
 
 // Resto de handlers igual que tienes, sin cambios
 

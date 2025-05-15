@@ -85,6 +85,16 @@ async function crearTablas() {
             FOREIGN KEY (historical_user_id) REFERENCES users(user_id)
         );
     `);
+   await db.exec(`
+        CREATE TABLE IF NOT EXISTS password_reset_tokens (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_email TEXT NOT NULL,
+    token TEXT NOT NULL,
+    expires_at TEXT NOT NULL
+  )
+    `);
+
+
 }
 
 // Crear la ventana principal

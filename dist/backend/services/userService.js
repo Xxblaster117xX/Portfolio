@@ -61,7 +61,7 @@ class UserService {
     }
   }
 
-  static async obtenerUsuarios() {
+   static async obtenerUsuarios() {
     try {
       return await db.all(`SELECT * FROM users`);
     } catch (error) {
