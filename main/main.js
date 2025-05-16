@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { fileURLToPath } from 'url';
 import path from 'path';
-import express from 'express'; // <-- IMPORTANTE
+import express from 'express'; 
 //import forgotPasswordRouter from '../dist/backend/services/forgot-password.js';
 //import resetPasswordRouter from '../dist/backend/services/reset-password.js';
 import UserService from '../dist/backend/services/userService.js';
@@ -87,7 +87,7 @@ if (!gotTheLock) {
 // Función para probar el envío de correo al iniciar
 async function pruebaEnvioCorreo() {
   try {
-    const testEmail = 'acarreterog01@santiagoapostol.net';  // Cambia aquí por tu email de prueba
+    const testEmail = 'acarreterog01@santiagoapostol.net'; 
     const codigoPrueba = '123456';
     console.log('Probando envío de correo...');
     await enviarCodigoVerificacion(testEmail, codigoPrueba);
@@ -167,7 +167,16 @@ ipcMain.handle('iniciar-sesion', async (event, { userGmail, userPassword }) => {
   try {
     const esValido = await UserService.verificarContraseña(userGmail, userPassword);
     if (esValido) {
-      return { success: true, message: 'Inicio de sesión exitoso.' };
+      const usuario = await UserService.obtenerUsuarioPorGmail(userGmail);
+     return {
+  success: true,
+  message: 'Inicio de sesión exitoso.',
+  user: {
+    nombre: usuario.user_name,
+    correo: usuario.user_gmail,
+    rol: usuario.rol
+  }
+      };
     } else {
       return { success: false, message: 'Correo o contraseña incorrectos.' };
     }
@@ -176,6 +185,7 @@ ipcMain.handle('iniciar-sesion', async (event, { userGmail, userPassword }) => {
     return { success: false, message: error.message || 'Error en el inicio de sesión.' };
   }
 });
+
 
 ipcMain.handle('enviar-correo-reset', async (event, correo, enlace) => {
   try {

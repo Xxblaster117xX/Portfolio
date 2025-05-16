@@ -5,6 +5,7 @@ import MainPage from './components/MainPage';
 import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
 import VerifyCodeForm from './components/VerifyCodeForm';
+import Panel from './components/SideBar'
 //Rutas de la aplicación
 export function App() {
   return (
@@ -14,6 +15,7 @@ export function App() {
         <Route path="/LoginForm" element={<LoginForm />} />
         <Route path="/RegisterForm" element={<RegisterForm />} />
          <Route path="/VerifyCodeForm" element={<VerifyCodeForm />} />
+       <Route path="/SideBar" element={<Panel />} />  
       </Routes>
     </Router>
   );

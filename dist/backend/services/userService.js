@@ -1,6 +1,7 @@
 import { db } from '../database/connection.js';
 import bcryptjs from 'bcryptjs';
 
+// Clase para implementar los método que tendrá el usuario en : registro, incio de sesión y  verificación de código 
 class UserService {
   static verificarContraseñaFuerte(password) {
     const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;

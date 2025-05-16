@@ -97,8 +97,7 @@ export default function RegisterForm() {
           value={rol}
           onChange={(e) => setRol(e.target.value)}
         >
-          <option value="user">Usuario</option>
-          <option value="admin">Administrador</option>
+          <option value="user">Alumno</option>
           <option value="profesor">Profesor</option>
         </select>
         <button className="form-button" type="submit">Registrar</button>

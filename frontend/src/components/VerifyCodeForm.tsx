@@ -6,7 +6,7 @@ import '../styles/VerifyCodeForm.css';
 export default function VerifyCodeForm() {
   const location = useLocation();
   const navigate = useNavigate();
-  const userGmail = location.state?.userGmail ?? ''; // 👈 viene del registro
+  const userGmail = location.state?.userGmail ?? ''; //  viene del registro
 
   const [codigo, setCodigo] = useState('');
   const [message, setMessage] = useState('');

@@ -8,21 +8,40 @@ export default function LoginForm() {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
+  type Usuario = {
+  nombre: string;
+  correo: string;
+  rol: string;
+};
+
+type RespuestaLogin = {
+  success: boolean;
+  message: string;
+  user?: Usuario;
+};
+
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await window.electron.iniciarSesion({ userGmail, userPassword });
-      if (response.success) {
-        alert('Inicio de sesión exitoso.');
-        setMessage('');
-      } else {
-        setMessage(response.message);
-      }
-    } catch (error) {
-      console.error('Error al iniciar sesión:', error);
-      setMessage('Ocurrió un error al intentar iniciar sesión.');
+  e.preventDefault();
+  try {
+    const response = await window.electron.iniciarSesion({
+      userGmail,
+      userPassword,
+    }) as RespuestaLogin;
+
+    if (response.success && response.user) {
+      alert('Inicio de sesión exitoso.');
+      localStorage.setItem('usuario', JSON.stringify(response.user)); // Guarda usuario para que aparezca en el sidebar
+      setMessage('');
+      navigate('/SideBar'); // Redirige al sidebar: Cambiar ruta por la del sidebar
+    } else {
+      setMessage(response.message || 'Fallo en el inicio de sesión.');
     }
-  };
+  } catch (error) {
+    console.error('Error al iniciar sesión:', error);
+    setMessage('Ocurrió un error al intentar iniciar sesión.');
+  }
+};
+
 
   const handleRecoverPassword = () => {
     alert('Funcionalidad de recuperación de contraseña aún no implementada.');
@@ -50,7 +69,7 @@ export default function LoginForm() {
         />
         <button type="submit" className="login-button">Iniciar Sesión</button>
         {message && <p className="login-message">{message}</p>}
-        
+
         <button
           type="button"
           className="login-secondary-button"
