@@ -6,7 +6,7 @@
   padding: 32px 20px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 30px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: white;
   position: fixed;
@@ -14,9 +14,13 @@
   left: 0;
 }
 
+.sidebar-content {
+  flex: 1;
+}
+
 .sidebar-user-info {
   text-align: left;
-  margin-bottom: 40px;
+  margin-bottom: 24px;
 }
 
 .sidebar-user-info p {
@@ -63,6 +67,7 @@
 }
 
 .sidebar-logout-btn {
+  margin-top: 20px;
   padding: 12px;
   background-color: #e63946;
   color: white;
