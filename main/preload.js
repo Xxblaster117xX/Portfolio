@@ -28,4 +28,21 @@ contextBridge.exposeInMainWorld('electron', {
     console.log('Llamada a enviarCorreoNotificacion:', correo, mensaje);
     return ipcRenderer.invoke('enviar-notificacion', correo, mensaje);
   },
+
+
+    // Reactivos CRUD
+  insertarReactivo: (data) => ipcRenderer.invoke('insertar-reactivo', data),
+  obtenerReactivos: () => ipcRenderer.invoke('obtener-reactivos'),
+  actualizarReactivo: (data) => ipcRenderer.invoke('actualizar-reactivo', data),
+  eliminarReactivo: (id) => ipcRenderer.invoke('eliminar-reactivo', id),
+
+
+  // Movimientos
+  registrarMovimiento: (data) => ipcRenderer.invoke('registrar-movimiento', data),
+  obtenerMovimientos: () => ipcRenderer.invoke('obtener-movimientos'),
+  obtenerMovimientosPorProducto: (productId) => ipcRenderer.invoke('obtener-movimientos-por-producto', productId),
+
+  // Historial
+  registrarHistorial: (data) => ipcRenderer.invoke('registrar-historial', data),
+  obtenerHistorial: () => ipcRenderer.invoke('obtener-historial'),
 });

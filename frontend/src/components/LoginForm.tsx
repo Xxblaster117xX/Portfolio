@@ -27,12 +27,12 @@ type RespuestaLogin = {
       userGmail,
       userPassword,
     }) as RespuestaLogin;
-
+ console.log('Respuesta login:', response);  // <-- Añade esto
     if (response.success && response.user) {
       alert('Inicio de sesión exitoso.');
       localStorage.setItem('usuario', JSON.stringify(response.user)); // Guarda usuario para que aparezca en el sidebar
       setMessage('');
-      navigate('/SideBar'); // Redirige al sidebar: Cambiar ruta por la del sidebar
+      navigate('/Sidebar'); // Redirige al sidebar: Cambiar ruta por la del sidebar
     } else {
       setMessage(response.message || 'Fallo en el inicio de sesión.');
     }

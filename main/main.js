@@ -206,3 +206,96 @@ ipcMain.handle('enviar-notificacion', async (event, correo, mensaje) => {
     return { success: false, message: 'No se pudo enviar la notificación.' };
   }
 });
+import * as MovementService from '../dist/backend/services/movementService.js';
+import * as ReagentService from '../dist/backend/services/reagentService.js';
+import * as HistoricalService from '../dist/backend/services/historicalService.js';
+
+// MOVIMIENTOS
+ipcMain.handle('registrar-movimiento', async (event, data) => {
+  try {
+    const { productIdMovement, movementType, movementQuantity, movementDate, userIdMovement } = data;
+    await MovementService.registrarMovimiento(productIdMovement, movementType, movementQuantity, movementDate, userIdMovement);
+    return { success: true };
+  } catch (error) {
+    console.error('Error registrar-movimiento:', error);
+    return { success: false, message: error.message };
+  }
+});
+
+ipcMain.handle('obtener-movimientos', async () => {
+  try {
+    const movimientos = await MovementService.obtenerMovimientos();
+    return { success: true, data: movimientos };
+  } catch (error) {
+    console.error('Error obtener-movimientos:', error);
+    return { success: false, message: error.message };
+  }
+});
+
+// REACTIVOS
+ipcMain.handle('insertar-reactivo', async (event, data) => {
+  try {
+    await ReagentService.insertarReactivo(
+      data.reagentCas, data.reagentName, data.reagentQuantity, data.reagentUnit,
+      data.reagentAddDate, data.reagentExpirationDate, data.reagentSupplier, data.reagentType, data.reagentFDS
+    );
+    return { success: true };
+  } catch (error) {
+    console.error('Error insertar-reactivo:', error);
+    return { success: false, message: error.message };
+  }
+});
+
+ipcMain.handle('obtener-reactivos', async () => {
+  try {
+    const reactivos = await ReagentService.obtenerReactivos();
+    return { success: true, data: reactivos };
+  } catch (error) {
+    console.error('Error obtener-reactivos:', error);
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle('actualizar-reactivo', async (event, data) => {
+  try {
+    await ReagentService.actualizarReactivo(
+      data.reagentId, data.reagentCas, data.reagentName, data.reagentQuantity, data.reagentUnit,
+      data.reagentAddDate, data.reagentExpirationDate, data.reagentSupplier, data.reagentType, data.reagentFDS
+    );
+    return { success: true };
+  } catch (error) {
+    console.error('Error actualizar-reactivo:', error);
+    return { success: false, message: error.message };
+  }
+});
+
+ipcMain.handle('eliminar-reactivo', async (event, reagentId) => {
+  try {
+    await ReagentService.eliminarReactivo(reagentId);
+    return { success: true };
+  } catch (error) {
+    console.error('Error eliminar-reactivo:', error);
+    return { success: false, message: error.message };
+  }
+});
+
+// HISTORIAL
+ipcMain.handle('registrar-historial', async (event, data) => {
+  try {
+    const { historicalUserId, action, actionDate, details } = data;
+    await HistoricalService.registrarAccionHistorica(historicalUserId, action, actionDate, details);
+    return { success: true };
+  } catch (error) {
+    console.error('Error registrar-historial:', error);
+    return { success: false, message: error.message };
+  }
+});
+
+ipcMain.handle('obtener-historial', async () => {
+  try {
+    const historial = await HistoricalService.obtenerAccionesHistoricas();
+    return { success: true, data: historial };
+  } catch (error) {
+    console.error('Error obtener-historial:', error);
+    return { success: false, message: error.message };
+  }
+});

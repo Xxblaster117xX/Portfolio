@@ -1,0 +1,80 @@
+/* Reagent.css */
+
+.reagent-container {
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+}
+
+.reagent-title {
+  color: #0d47a1;
+  margin-bottom: 1rem;
+}
+
+.reagent-form-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.reagent-input {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.reagent-btn-create,
+.reagent-btn-update {
+  padding: 10px;
+  background-color: #0d47a1;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  grid-column: span 2;
+}
+
+.reagent-btn-cancel {
+  padding: 10px;
+  background-color: #f57c00;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.reagent-btn-edit {
+  padding: 6px 10px;
+  margin-right: 5px;
+  background-color: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.reagent-btn-delete {
+  padding: 6px 10px;
+  background-color: #d32f2f;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.reagent-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.reagent-table th {
+  background-color: #1976d2;
+  color: #fff;
+  padding: 10px;
+  text-align: left;
+}
+
+.reagent-table td {
+  padding: 8px;
+  border: 1px solid #ccc;
+}
