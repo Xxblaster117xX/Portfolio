@@ -24,7 +24,7 @@ export const insertarReactivo = async (
   if (!esTextoValido(reagentType)) throw new Error('El tipo de reactivo no puede estar vacío.');
   if (!esTextoValido(reagentFDS)) throw new Error('La FDS del reactivo no puede estar vacía.');
 
-  await db.run(`
+  const result = await db.run(`
     INSERT INTO reagents (
       reagent_cas, reagent_name, reagent_quantity, reagent_unit,
       reagent_add_date, reagent_expiration_date, reagent_supplier, reagent_type, reagent_fds
@@ -35,8 +35,11 @@ export const insertarReactivo = async (
     reagentAddDate, reagentExpirationDate, reagentSupplier, reagentType, reagentFDS
   ]);
 
-  console.log(`Reactivo insertado: ${reagentName}`);
+  console.log(`Reactivo insertado: ${reagentName} con ID ${result.lastID}`);
+
+  return result.lastID;  // <-- Retornar el id generado
 };
+
 
 // Obtener todos los reactivos
 export const obtenerReactivos = async () => {

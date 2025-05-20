@@ -55,6 +55,14 @@ async function crearTablas() {
             isVerified BOOLEAN DEFAULT FALSE
         );
     `);
+     await db.exec(`
+        CREATE TABLE IF NOT EXISTS productos (
+            id INTEGER PRIMARY KEY,
+            nombre TEXT NOT NULL,
+            cantidad REAL NOT NULL,
+            precio REAL NOT NULL
+        );
+    `);
     await db.exec(`
         CREATE TABLE IF NOT EXISTS movements (
             movement_id INTEGER PRIMARY KEY,
@@ -67,14 +75,7 @@ async function crearTablas() {
             FOREIGN KEY (user_id_movement) REFERENCES users(user_id)
         );
     `);
-    await db.exec(`
-        CREATE TABLE IF NOT EXISTS productos (
-            id INTEGER PRIMARY KEY,
-            nombre TEXT NOT NULL,
-            cantidad REAL NOT NULL,
-            precio REAL NOT NULL
-        );
-    `);
+   
     await db.exec(`
         CREATE TABLE IF NOT EXISTS historical (
             historical_id INTEGER PRIMARY KEY,

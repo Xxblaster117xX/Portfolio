@@ -235,16 +235,17 @@ ipcMain.handle('obtener-movimientos', async () => {
 // REACTIVOS
 ipcMain.handle('insertar-reactivo', async (event, data) => {
   try {
-    await ReagentService.insertarReactivo(
+    const insertedId = await ReagentService.insertarReactivo(
       data.reagentCas, data.reagentName, data.reagentQuantity, data.reagentUnit,
       data.reagentAddDate, data.reagentExpirationDate, data.reagentSupplier, data.reagentType, data.reagentFDS
     );
-    return { success: true };
+    return { success: true, id: insertedId };
   } catch (error) {
     console.error('Error insertar-reactivo:', error);
     return { success: false, message: error.message };
   }
 });
+
 
 ipcMain.handle('obtener-reactivos', async () => {
   try {
