@@ -33,11 +33,11 @@ async function crearTablas() {
     `);
     await db.exec(`
         CREATE TABLE IF NOT EXISTS reagents (
-            reagent_id INTEGER PRIMARY KEY,
+            reagent_id INTEGER PRIMARY KEY AUTOINCREMENT,
             reagent_cas TEXT NOT NULL,
             reagent_name TEXT NOT NULL,
             reagent_quantity REAL NOT NULL,
-            reagent_unit INTEGER NOT NULL,
+            reagent_unit TEXT NOT NULL,
             reagent_add_date TEXT NOT NULL,
             reagent_expiration_date TEXT NOT NULL,
             reagent_supplier TEXT NOT NULL,

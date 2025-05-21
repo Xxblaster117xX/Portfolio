@@ -1,20 +1,20 @@
 import { IMovement } from "../interface/IMovement";
 
 export class Movement implements IMovement {
-  MovementId: number;
-productIdMovement: number;
-MovementType:string;
-MovementQuantity:number;
-MovementDate: Date;
-UserIdMoverment:number;
-constructor(MovementId: number, productIdMovement: number, MovementType: string, MovementQuantity: number, MovementDate: Date, UserIdMoverment: number) {
-    this.MovementId = MovementId;
-    this.productIdMovement = productIdMovement;
-    this.MovementType = MovementType;
-    this.MovementQuantity = MovementQuantity;
-    this.MovementDate = MovementDate;
-    this.UserIdMoverment = UserIdMoverment;
-  }
+    MovementId: number;
+    productIdMovement: number;
+    MovementType: string;
+    MovementQuantity: number;
+    MovementDate: Date;
+    UserIdMoverment: number;
+    constructor(MovementId: number, productIdMovement: number, MovementType: string, MovementQuantity: number, MovementDate: Date, UserIdMoverment: number) {
+        this.MovementId = MovementId;
+        this.productIdMovement = productIdMovement;
+        this.MovementType = MovementType;
+        this.MovementQuantity = MovementQuantity;
+        this.MovementDate = MovementDate;
+        this.UserIdMoverment = UserIdMoverment;
+    }
 
     // Getters
     public getId(): number {
@@ -47,13 +47,13 @@ constructor(MovementId: number, productIdMovement: number, MovementType: string,
     }
     public setMovementQuantity(MovementQuantity: number): void {
         this.MovementQuantity = MovementQuantity;
-    }   
+    }
     public setMovementDate(MovementDate: Date): void {
         this.MovementDate = MovementDate;
     }
     public setUserIdMoverment(UserIdMoverment: number): void {
         this.UserIdMoverment = UserIdMoverment;
     }
-    
-  
+
+
 }

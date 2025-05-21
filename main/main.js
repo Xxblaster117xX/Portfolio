@@ -2,6 +2,9 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import express from 'express'; 
+import * as MovementService from '../dist/backend/services/movementService.js';
+import * as ReagentService from '../dist/backend/services/reagentService.js';
+import * as HistoricalService from '../dist/backend/services/historicalService.js';
 //import forgotPasswordRouter from '../dist/backend/services/forgot-password.js';
 //import resetPasswordRouter from '../dist/backend/services/reset-password.js';
 import UserService from '../dist/backend/services/userService.js';
@@ -206,9 +209,7 @@ ipcMain.handle('enviar-notificacion', async (event, correo, mensaje) => {
     return { success: false, message: 'No se pudo enviar la notificación.' };
   }
 });
-import * as MovementService from '../dist/backend/services/movementService.js';
-import * as ReagentService from '../dist/backend/services/reagentService.js';
-import * as HistoricalService from '../dist/backend/services/historicalService.js';
+
 
 // MOVIMIENTOS
 ipcMain.handle('registrar-movimiento', async (event, data) => {

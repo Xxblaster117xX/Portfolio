@@ -1,39 +1,59 @@
-/* Reagent.css */
-
 .reagent-container {
   padding: 2rem;
   font-family: Arial, sans-serif;
 }
 
+/* Título */
 .reagent-title {
   color: #0d47a1;
   margin-bottom: 1rem;
 }
 
+/* Caja de formulario con fondo gris claro */
 .reagent-form-container {
+  background-color: #f0f0f0; /* gris claro */
+  padding: 1.5rem;
+  border-radius: 8px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 12px;
+  gap: 16px;
   margin-bottom: 20px;
+  position: relative;
 }
 
+/* Grupo de input con su label */
+.reagent-form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Etiqueta del campo */
+.reagent-form-group label {
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+/* Inputs */
 .reagent-input {
   padding: 8px;
   border-radius: 6px;
   border: 1px solid #ccc;
 }
 
-.reagent-btn-create,
-.reagent-btn-update {
+/* Botón Crear centrado */
+.reagent-btn-create {
   padding: 10px;
   background-color: #0d47a1;
   color: #fff;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  grid-column: span 2;
+  grid-column: 1 / -1; /* Ocupar todas las columnas */
+  justify-self: center; /* Centrado */
+  width: 150px;
 }
 
+/* Botón cancelar (si lo usas en otra parte) */
 .reagent-btn-cancel {
   padding: 10px;
   background-color: #f57c00;
@@ -65,6 +85,7 @@
 .reagent-table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 2rem;
 }
 
 .reagent-table th {

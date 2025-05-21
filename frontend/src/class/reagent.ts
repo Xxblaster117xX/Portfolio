@@ -5,14 +5,14 @@ export class Reagent  implements Reagents {
   reagentCas:string;
   reagentName : string;
   reagentQuantity: number;
-  reagentUnit: number;
+  reagentUnit: string;
   reagentAddDate:Date;
   reagentExpirationDate: Date;
   reagentSupplier: string;
   reagentType: string;
   reagentFDS: string 
    // Constructor
-  constructor(reagentId:number, reagentCas: string, reagentName: string, reagentQuantity: number, reagentUnit: number, reagentAddDate: Date, reagentExpirationDate: Date, reagentSupplier: string, reagentType: string, reagentFDS: string
+  constructor(reagentId:number, reagentCas: string, reagentName: string, reagentQuantity: number, reagentUnit: string, reagentAddDate: Date, reagentExpirationDate: Date, reagentSupplier: string, reagentType: string, reagentFDS: string
   ) {
     this.reagentId=reagentId;
     this.reagentCas = reagentCas;
@@ -42,7 +42,7 @@ export class Reagent  implements Reagents {
     return this.reagentQuantity;
   }
 
-  getReagentUnit(): number {
+  getReagentUnit(): string {
     return this.reagentUnit;
   }
 
@@ -82,7 +82,7 @@ export class Reagent  implements Reagents {
     this.reagentQuantity = reagentQuantity;
   }
 
-  setReagentUnit(reagentUnit: number): void {
+  setReagentUnit(reagentUnit: string): void {
     this.reagentUnit = reagentUnit;
   }
 

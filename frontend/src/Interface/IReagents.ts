@@ -5,7 +5,7 @@ export interface Reagents {
   reagentCas:string;
   reagentName : string;
   reagentQuantity: number;
-  reagentUnit: number;
+  reagentUnit: string;
   reagentAddDate:Date;
   reagentExpirationDate: Date;
   reagentSupplier: string;
