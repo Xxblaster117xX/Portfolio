@@ -8,7 +8,7 @@ export default function ReagentsComponent() {
     reagentCas: '',
     reagentName: '',
     reagentQuantity: 0,
-    reagentUnit: "",
+    reagentUnit: '',
     reagentAddDate: new Date(),
     reagentExpirationDate: new Date(),
     reagentSupplier: '',
@@ -34,7 +34,7 @@ export default function ReagentsComponent() {
             reagentCas: r.reagentCas || '',
             reagentName: r.reagentName || '',
             reagentQuantity: Number(r.reagentQuantity) || 0,
-            reagentUnit: r.reagentUnit || "",
+            reagentUnit: r.reagentUnit || '',
             reagentAddDate: safeAddDate,
             reagentExpirationDate: safeExpDate,
             reagentSupplier: r.reagentSupplier || '',
@@ -66,20 +66,20 @@ export default function ReagentsComponent() {
     return d.toISOString().slice(0, 10);
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value, type } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]:
-        type === 'date'
-          ? new Date(value)
-          : name.includes('Quantity') || name.includes('Unit')
-            ? Number(value)
-            : value,
-    }));
-  };
+const handleChange = (
+  e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+) => {
+  const { name, value, type } = e.target;
+  setForm((prev) => ({
+    ...prev,
+    [name]:
+      type === 'date'
+        ? new Date(value)
+        : name === 'reagentQuantity'
+          ? Number(value)
+          : value,
+  }));
+};
 
   const resetForm = () => {
     setForm({
