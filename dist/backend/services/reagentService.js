@@ -31,7 +31,7 @@ export const insertarReactivo = async (
   if (!esTextoValido(reagentCas)) throw new Error('El CAS del reactivo no puede estar vacío.');
   if (!esTextoValido(reagentName)) throw new Error('El nombre del reactivo no puede estar vacío.');
   if (!esNumeroValido(reagentQuantity)) throw new Error('La cantidad debe ser un número válido y no negativo.');
-  if (!esTextoValido(reagentUnit)) throw new Error('El nombre del reactivo no puede estar vacío');
+  if (!esTextoValido(reagentUnit)) throw new Error('La unidad del reactivo no puede estar vacío');
   if (!esFechaValida(reagentAddDate)) throw new Error('La fecha de adición debe tener el formato YYYY-MM-DD.');
   if (!esFechaValida(reagentExpirationDate)) throw new Error('La fecha de expiración debe tener el formato YYYY-MM-DD.');
   if (!esTextoValido(reagentSupplier)) throw new Error('El proveedor no puede estar vacío.');

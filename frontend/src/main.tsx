@@ -6,7 +6,7 @@ import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
 import VerifyCodeForm from './components/VerifyCodeForm';
 import MainLayout from './components/MainLayout';
-import Reagents from './components/Reagents';
+import Reagents from './components/ReagentManager';
 import RutaPrivada from './components/RutaPrivada';
 
 // Componente principal con rutas
@@ -23,13 +23,13 @@ function App() {
         {/* Rutas privadas con layout */}
         <Route element={<RutaPrivada />}>
           <Route element={<MainLayout />}>
-            <Route path="/Reagents" element={<Reagents />} />
+            <Route path="/ReagentManager" element={<Reagents />} />
             {/* Puedes añadir más rutas privadas aquí */}
           </Route>
         </Route>
 
         {/* Catch-all */}
-        <Route path="*" element={<Navigate to="/Reagents" />} />
+        <Route path="*" element={<Navigate to="/ReagentManager" />} />
       </Routes>
     </Router>
   );
