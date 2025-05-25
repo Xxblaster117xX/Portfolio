@@ -42,7 +42,8 @@ async function crearTablas() {
             reagent_expiration_date TEXT NOT NULL,
             reagent_supplier TEXT NOT NULL,
             reagent_type TEXT NOT NULL,
-            reagent_fds TEXT NOT NULL
+            reagent_fds TEXT NOT NULL,
+            reagent_state TEXT NOT NULL DEFAULT 'disponible'
         );
     `);
     await db.exec(`
@@ -55,7 +56,7 @@ async function crearTablas() {
             isVerified BOOLEAN DEFAULT FALSE
         );
     `);
-     await db.exec(`
+    await db.exec(`
         CREATE TABLE IF NOT EXISTS productos (
             id INTEGER PRIMARY KEY,
             nombre TEXT NOT NULL,
@@ -65,17 +66,21 @@ async function crearTablas() {
     `);
     await db.exec(`
         CREATE TABLE IF NOT EXISTS movements (
-            movement_id INTEGER PRIMARY KEY,
-            product_id_movement INTEGER NOT NULL,
-            movement_type TEXT NOT NULL,
+            movement_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            reagent_id INTEGER NOT NULL,
+            movement_type TEXT NOT NULL CHECK (movement_type IN ('entrada', 'salida')),
             movement_quantity REAL NOT NULL,
-            movement_date TEXT NOT NULL,
-            user_id_movement INTEGER NOT NULL,
-            FOREIGN KEY (product_id_movement) REFERENCES productos(id),
-            FOREIGN KEY (user_id_movement) REFERENCES users(user_id)
+            unit TEXT NOT NULL,
+            quantity_before REAL NOT NULL,
+            quantity_after REAL NOT NULL,
+            movement_date TEXT NOT NULL, 
+            user_id INTEGER NOT NULL,
+            description TEXT,
+            FOREIGN KEY (reagent_id) REFERENCES reagents(reagent_id),
+            FOREIGN KEY (user_id) REFERENCES users(user_id) 
         );
     `);
-   
+
     await db.exec(`
         CREATE TABLE IF NOT EXISTS historical (
             historical_id INTEGER PRIMARY KEY,
@@ -86,7 +91,7 @@ async function crearTablas() {
             FOREIGN KEY (historical_user_id) REFERENCES users(user_id)
         );
     `);
-   await db.exec(`
+    await db.exec(`
         CREATE TABLE IF NOT EXISTS password_reset_tokens (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_email TEXT NOT NULL,

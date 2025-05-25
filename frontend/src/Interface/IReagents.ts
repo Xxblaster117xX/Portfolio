@@ -1,5 +1,5 @@
 
-
+export type ReagentState = 'disponible' | 'escogido';
 export interface Reagents {
   reagentId:number;
   reagentCas:string;
@@ -10,6 +10,7 @@ export interface Reagents {
   reagentExpirationDate: Date;
   reagentSupplier: string;
   reagentType: string;
-  reagentFDS: string 
+  reagentFDS: string ;
+  reagentState: ReagentState;
   }
   

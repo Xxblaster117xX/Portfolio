@@ -6,10 +6,17 @@ const esFechaValida = (fecha) => /^\d{4}-\d{2}-\d{2}$/.test(fecha);
 // Validación de valores numéricos no negativos
 const esNumeroValido = (numero) => !isNaN(numero) && numero >= 0;
 
-// Validación de texto no vacío
-const esTextoValido = (texto) => texto.trim() !== '';
+// Validación de texto no vacío y tipo string
+const esTextoValido = (texto) => {
+  try {
+    return typeof texto === 'string' && texto.trim() !== '';
+  } catch (error) {
+    console.error('Error en esTextoValido con valor:', texto, error);
+    throw error;
+  }
+};
 
-// Utilidad para convertir un reactivo de snake_case a camelCase
+// Convertir snake_case a camelCase
 const mapReagentToCamelCase = (r) => ({
   reagentId: r.reagent_id,
   reagentCas: r.reagent_cas,
@@ -20,7 +27,8 @@ const mapReagentToCamelCase = (r) => ({
   reagentExpirationDate: r.reagent_expiration_date,
   reagentSupplier: r.reagent_supplier,
   reagentType: r.reagent_type,
-  reagentFDS: r.reagent_fds
+  reagentFDS: r.reagent_fds,
+  reagentState: r.reagent_state || 'disponible'
 });
 
 // Insertar un nuevo reactivo
@@ -41,12 +49,13 @@ export const insertarReactivo = async (
   const result = await db.run(`
     INSERT INTO reagents (
       reagent_cas, reagent_name, reagent_quantity, reagent_unit,
-      reagent_add_date, reagent_expiration_date, reagent_supplier, reagent_type, reagent_fds
+      reagent_add_date, reagent_expiration_date, reagent_supplier, reagent_type, reagent_fds, reagent_state
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `, [
     reagentCas, reagentName, reagentQuantity, reagentUnit,
-    reagentAddDate, reagentExpirationDate, reagentSupplier, reagentType, reagentFDS
+    reagentAddDate, reagentExpirationDate, reagentSupplier, reagentType, reagentFDS,
+    'disponible'
   ]);
 
   console.log(`Reactivo insertado: ${reagentName} con ID ${result.lastID}`);
@@ -68,8 +77,13 @@ export const obtenerReactivoPorId = async (reagentId) => {
 // Actualizar un reactivo
 export const actualizarReactivo = async (
   reagentId, reagentCas, reagentName, reagentQuantity, reagentUnit,
-  reagentAddDate, reagentExpirationDate, reagentSupplier, reagentType, reagentFDS
+  reagentAddDate, reagentExpirationDate, reagentSupplier, reagentType, reagentFDS, reagentState
 ) => {
+  console.log('Actualizando reactivo con:', {
+    reagentId, reagentCas, reagentName, reagentQuantity, reagentUnit,
+    reagentAddDate, reagentExpirationDate, reagentSupplier, reagentType, reagentFDS, reagentState
+  });
+
   if (!esTextoValido(reagentCas)) throw new Error('El CAS del reactivo no puede estar vacío.');
   if (!esTextoValido(reagentName)) throw new Error('El nombre del reactivo no puede estar vacío.');
   if (!esNumeroValido(reagentQuantity)) throw new Error('La cantidad debe ser un número válido y no negativo.');
@@ -79,15 +93,17 @@ export const actualizarReactivo = async (
   if (!esTextoValido(reagentSupplier)) throw new Error('El proveedor no puede estar vacío.');
   if (!esTextoValido(reagentType)) throw new Error('El tipo de reactivo no puede estar vacío.');
   if (!esTextoValido(reagentFDS)) throw new Error('La FDS del reactivo no puede estar vacía.');
+  if (!esTextoValido(reagentState)) throw new Error('El estado del reactivo no puede estar vacío.');
 
   await db.run(`
     UPDATE reagents SET
       reagent_cas = ?, reagent_name = ?, reagent_quantity = ?, reagent_unit = ?,
-      reagent_add_date = ?, reagent_expiration_date = ?, reagent_supplier = ?, reagent_type = ?, reagent_fds = ?
+      reagent_add_date = ?, reagent_expiration_date = ?, reagent_supplier = ?, reagent_type = ?, reagent_fds = ?, reagent_state = ?
     WHERE reagent_id = ?
   `, [
     reagentCas, reagentName, reagentQuantity, reagentUnit,
     reagentAddDate, reagentExpirationDate, reagentSupplier, reagentType, reagentFDS,
+    reagentState,
     reagentId
   ]);
 
@@ -110,4 +126,58 @@ export const obtenerReactivosPorNombre = async (nombre) => {
 export const verificarReactivoExistente = async (reagentName) => {
   const result = await db.get(`SELECT 1 FROM reagents WHERE reagent_name = ? LIMIT 1`, [reagentName]);
   return !!result;
+};
+
+// Cambiar estado del reactivo a 'escogido'
+export const marcarReactivoComoEscogido = async (reagentId) => {
+  const reactivo = await obtenerReactivoPorId(reagentId);
+  if (!reactivo) throw new Error('Reactivo no encontrado');
+
+  if (reactivo.reagentState === 'escogido') {
+    throw new Error('El reactivo ya está marcado como escogido');
+  }
+
+  await db.run(
+    `UPDATE reagents SET reagent_state = ? WHERE reagent_id = ?`,
+    ['escogido', reagentId]
+  );
+
+  console.log(`Reactivo ID ${reagentId} marcado como escogido.`);
+};
+
+// Introducir cantidad gastada y actualizar cantidad total y estado
+export const introducirReactivo = async (reagentId, cantidadGastada, userId) => {
+  console.log('introducirReactivo called with:', { reagentId, cantidadGastada, userId });
+  const cantidadNum = parseFloat(cantidadGastada);
+  if (isNaN(cantidadNum) || cantidadNum < 0) throw new Error('Cantidad gastada inválida');
+
+  const reactivo = await obtenerReactivoPorId(reagentId);
+  if (!reactivo) throw new Error('Reactivo no encontrado');
+
+  console.log('Reactivo actual:', reactivo);
+
+  const nuevaCantidad = reactivo.reagentQuantity - cantidadNum;
+  console.log('nuevaCantidad:', nuevaCantidad);
+
+  if (nuevaCantidad < 0) {
+    throw new Error('Cantidad gastada mayor que la cantidad disponible');
+  }
+
+  // Mantener estado 'escogido' si queda cantidad, 'agotado' si 0
+  const nuevoEstado = nuevaCantidad === 0 ? 'agotado' : reactivo.reagentState;
+
+  await db.run(
+    `UPDATE reagents SET reagent_quantity = ?, reagent_state = ? WHERE reagent_id = ?`,
+    [nuevaCantidad, nuevoEstado, reagentId]
+  );
+
+  console.log(`Reactivo ID ${reagentId} actualizado: cantidad = ${nuevaCantidad}, estado = ${nuevoEstado}`);
+};
+
+
+
+// Obtener reactivos filtrando por estado
+export const obtenerReactivosPorEstado = async (estado) => {
+  const resultados = await db.all(`SELECT * FROM reagents WHERE reagent_state = ?`, [estado]);
+  return resultados.map(mapReagentToCamelCase);
 };

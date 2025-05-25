@@ -36,7 +36,7 @@ export default function Sidebar() {
         <nav className="sidebar-nav">
           <ul>
             <li><button onClick={() => handleNavigation('/ReagentManager')}>Reactivos</button></li>
-            <li><button onClick={() => handleNavigation('/configuracion')}>Configuración</button></li>
+            <li><button onClick={() => handleNavigation('/Movement')}>Movimientos</button></li>
             <li><button onClick={() => handleNavigation('/perfil')}>Perfil</button></li>
           </ul>
         </nav>

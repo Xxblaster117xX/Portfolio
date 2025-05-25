@@ -102,7 +102,7 @@ async function pruebaEnvioCorreo() {
 
 // Removed duplicate declaration of gotTheLock and merged logic
 app.whenReady().then(async () => {
-  await pruebaEnvioCorreo();  // <-- Ejecuta la prueba justo al iniciar
+ 
   createMainWindow();
 });
 
@@ -214,21 +214,80 @@ ipcMain.handle('enviar-notificacion', async (event, correo, mensaje) => {
 // MOVIMIENTOS
 ipcMain.handle('registrar-movimiento', async (event, data) => {
   try {
-    const { productIdMovement, movementType, movementQuantity, movementDate, userIdMovement } = data;
-    await MovementService.registrarMovimiento(productIdMovement, movementType, movementQuantity, movementDate, userIdMovement);
+    const {
+      reagentId,
+      movementType,
+      movementQuantity,
+      unit,
+      quantityBefore,
+      quantityAfter,
+      movementDate,
+      userId,
+      description = ''
+    } = data;
+
+    await MovementService.registrarMovimiento(
+      reagentId,
+      movementType,
+      movementQuantity,
+      unit,
+      quantityBefore,
+      quantityAfter,
+      movementDate,
+      userId,
+      description
+    );
     return { success: true };
   } catch (error) {
     console.error('Error registrar-movimiento:', error);
     return { success: false, message: error.message };
-  }
-});
-
+  }});
 ipcMain.handle('obtener-movimientos', async () => {
   try {
     const movimientos = await MovementService.obtenerMovimientos();
     return { success: true, data: movimientos };
   } catch (error) {
     console.error('Error obtener-movimientos:', error);
+    return { success: false, message: error.message };
+  }
+});
+
+ipcMain.handle('marcar-reactivo-escogido', async (event, reagentId) => {
+  try {
+    await ReagentService.marcarReactivoComoEscogido(reagentId);
+    return { success: true };
+  } catch (error) {
+    console.error('Error marcar-reactivo-escogido:', error);
+    return { success: false, message: error.message };
+  }
+});
+
+ipcMain.handle('introducir-reactivo', async (event, { reagentId, cantidadGastada, userId }) => {
+  try {
+    await ReagentService.introducirReactivo(reagentId, cantidadGastada, userId);
+    return { success: true };
+  } catch (error) {
+    console.error('Error introducir-reactivo:', error);
+    return { success: false, message: error.message };
+  }
+});
+
+ipcMain.handle('obtener-movimientos-por-producto', async (event, reagentId) => {
+  try {
+    const movimientos = await MovementService.obtenerMovimientosPorReactivo(reagentId);
+    return { success: true, data: movimientos };
+  } catch (error) {
+    console.error('Error obtener-movimientos-por-producto:', error);
+    return { success: false, message: error.message };
+  }
+});
+
+ipcMain.handle('obtener-reactivos-por-estado', async (event, estado) => {
+  try {
+    const data = await ReagentService.obtenerReactivosPorEstado(estado);
+    return { success: true, data };
+  } catch (error) {
+    console.error('Error obtener-reactivos-por-estado:', error);
     return { success: false, message: error.message };
   }
 });
@@ -261,7 +320,8 @@ ipcMain.handle('actualizar-reactivo', async (event, data) => {
   try {
     await ReagentService.actualizarReactivo(
       data.reagentId, data.reagentCas, data.reagentName, data.reagentQuantity, data.reagentUnit,
-      data.reagentAddDate, data.reagentExpirationDate, data.reagentSupplier, data.reagentType, data.reagentFDS
+      data.reagentAddDate, data.reagentExpirationDate, data.reagentSupplier, data.reagentType, data.reagentFDS,
+      data.reagentState  
     );
     return { success: true };
   } catch (error) {

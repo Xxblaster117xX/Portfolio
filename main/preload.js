@@ -29,18 +29,27 @@ contextBridge.exposeInMainWorld('electron', {
     return ipcRenderer.invoke('enviar-notificacion', correo, mensaje);
   },
 
+  marcarReactivoComoEscogido: (reagentId) => ipcRenderer.invoke('marcar-reactivo-escogido', reagentId),
 
-    // Reactivos CRUD
+  introducirReactivo: (reagentId, cantidadGastada, userId) =>
+    ipcRenderer.invoke('introducir-reactivo', { reagentId, cantidadGastada, userId }),
+
+  obtenerReactivosPorEstado: async (estado) => {
+    const res = await ipcRenderer.invoke('obtener-reactivos-por-estado', estado);
+    return res.success ? res.data : [];
+  },
+
+
+  // Reactivos CRUD
   insertarReactivo: (data) => ipcRenderer.invoke('insertar-reactivo', data),
   obtenerReactivos: () => ipcRenderer.invoke('obtener-reactivos'),
   actualizarReactivo: (data) => ipcRenderer.invoke('actualizar-reactivo', data),
   eliminarReactivo: (id) => ipcRenderer.invoke('eliminar-reactivo', id),
 
-
   // Movimientos
   registrarMovimiento: (data) => ipcRenderer.invoke('registrar-movimiento', data),
   obtenerMovimientos: () => ipcRenderer.invoke('obtener-movimientos'),
-  obtenerMovimientosPorProducto: (productId) => ipcRenderer.invoke('obtener-movimientos-por-producto', productId),
+  obtenerMovimientosPorProducto: (reagentId) => ipcRenderer.invoke('obtener-movimientos-por-producto', reagentId),
 
   // Historial
   registrarHistorial: (data) => ipcRenderer.invoke('registrar-historial', data),

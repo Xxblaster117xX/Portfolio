@@ -1,6 +1,6 @@
-import { IMovement } from "../interface/IMovement";
 
-export class Movement implements IMovement {
+
+export class Movement  {
     MovementId: number;
     productIdMovement: number;
     MovementType: string;

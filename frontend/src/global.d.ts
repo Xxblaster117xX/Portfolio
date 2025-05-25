@@ -1,5 +1,7 @@
-
 import { Reagents } from '../interface/IReagents';
+import { Movimiento } from '../interface/IMovimiento';
+import { Historial } from '../interface/IHistorial';
+
 declare global {
   interface Window {
     electron: {
@@ -20,7 +22,6 @@ declare global {
         userPassword: string; 
       }) => Promise<{ success: boolean; message: string }>;
 
-      // Métodos adicionales para la gestión de reactivos
       obtenerReactivos: () => Promise<{
         success: boolean;
         data: Reagents[]; 
@@ -41,10 +42,51 @@ declare global {
         success: boolean;
         message?: string;
       }>;
+
+      marcarReactivoComoEscogido: (productId: number) => Promise<void>;
+      introducirReactivo: (productId: number, cantidadGastada: number, userId: number) => Promise<void>;
+      obtenerReactivosPorEstado: (estado: string) => Promise<Reagents[]>;
+
+      // Movimientos
+      obtenerMovimientos: () => Promise<{
+        success: boolean;
+        data: Movimiento[];
+        message?: string;
+      }>;
+
+      obtenerMovimientosPorProducto: (productId: number) => Promise<{
+        success: boolean;
+        data: Movimiento[];
+        message?: string;
+      }>;
+
+      registrarMovimiento: (data: {
+        reagentId: number;
+        movementType: string;
+        movementQuantity: number;
+        unit: string;
+        quantityBefore: number;
+        quantityAfter: number;
+        movementDate: string;
+        userId: number;
+        description?: string;
+      }) => Promise<{ success: boolean; message?: string }>;
+
+      // Historial
+      registrarHistorial: (data: {
+        historicalUserId: number;
+        action: string;
+        actionDate: string;
+        details: string;
+      }) => Promise<{ success: boolean; message?: string }>;
+
+      obtenerHistorial: () => Promise<{
+        success: boolean;
+        data: Historial[];
+        message?: string;
+      }>;
     };
   }
-
-
-
-
 }
+
+export {};

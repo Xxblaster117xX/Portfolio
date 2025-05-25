@@ -1,5 +1,6 @@
-import { Reagents } from '../interface/IReagents';
 
+import { Reagents } from '../interface/IReagents';
+export type ReagentState = 'disponible' | 'escogido';
 export class Reagent  implements Reagents {
   reagentId: number;
   reagentCas:string;
@@ -11,9 +12,11 @@ export class Reagent  implements Reagents {
   reagentSupplier: string;
   reagentType: string;
   reagentFDS: string 
+  reagentState:ReagentState; 
    // Constructor
   constructor(reagentId:number, reagentCas: string, reagentName: string, reagentQuantity: number, reagentUnit: string, reagentAddDate: Date, reagentExpirationDate: Date, reagentSupplier: string, reagentType: string, reagentFDS: string
-  ) {
+  , reagentState:ReagentState) 
+  {
     this.reagentId=reagentId;
     this.reagentCas = reagentCas;
     this.reagentName = reagentName;
@@ -24,6 +27,7 @@ export class Reagent  implements Reagents {
     this.reagentSupplier = reagentSupplier;
     this.reagentType = reagentType;
     this.reagentFDS = reagentFDS;
+   this.reagentState=reagentState
   }
 
   // Getters
@@ -65,7 +69,12 @@ export class Reagent  implements Reagents {
   getReagentFDS(): string {
     return this.reagentFDS;
   }
-
+  getReagentState(): 'disponible' | 'escogido' {
+    return this.reagentState;
+  }
+  getReagentStateString(): string {
+    return this.reagentState.toString();
+  }
   // Setters
   setReagentId(reagentId:number):void{
   this.reagentId=reagentId;
@@ -105,5 +114,7 @@ export class Reagent  implements Reagents {
   setReagentFDS(reagentFDS: string): void {
     this.reagentFDS = reagentFDS;
   }
-    
+    setReagentState(reagentState: ReagentState): void {
+    this.reagentState = reagentState;
+  }
 }

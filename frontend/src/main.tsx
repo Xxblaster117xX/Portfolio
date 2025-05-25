@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast'; // ✅ Importa Toaster
+
 import MainPage from './components/MainPage';
 import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
@@ -8,11 +10,14 @@ import VerifyCodeForm from './components/VerifyCodeForm';
 import MainLayout from './components/MainLayout';
 import Reagents from './components/ReagentManager';
 import RutaPrivada from './components/RutaPrivada';
+import Movement from './components/Movement';
 
-// Componente principal con rutas
 function App() {
   return (
     <Router>
+    
+      <Toaster position="top-right" reverseOrder={false} />
+
       <Routes>
         {/* Rutas públicas */}
         <Route path="/" element={<MainPage />} />
@@ -24,18 +29,18 @@ function App() {
         <Route element={<RutaPrivada />}>
           <Route element={<MainLayout />}>
             <Route path="/ReagentManager" element={<Reagents />} />
-            {/* Puedes añadir más rutas privadas aquí */}
+        <Route path="/Movement" element={<Movement />} />
           </Route>
         </Route>
 
         {/* Catch-all */}
         <Route path="*" element={<Navigate to="/ReagentManager" />} />
+        <Route path="*" element={<Navigate to="/Movement" />} />
       </Routes>
     </Router>
   );
 }
 
-// Montar la app
 const rootElement = document.getElementById('root');
 if (rootElement) {
   const root = ReactDOM.createRoot(rootElement);
