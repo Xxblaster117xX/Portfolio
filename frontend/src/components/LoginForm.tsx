@@ -29,7 +29,7 @@ type RespuestaLogin = {
     }) as RespuestaLogin;
  console.log('Respuesta login:', response);  // <-- Añade esto
     if (response.success && response.user) {
-      alert('Inicio de sesión exitoso.');
+     console.log('Usuario iniciado con éxito', response.user)
       localStorage.setItem('usuario', JSON.stringify(response.user)); // Guarda usuario para que aparezca en el sidebar
       setMessage('');
       navigate('/Sidebar'); // Redirige al sidebar: Cambiar ruta por la del sidebar

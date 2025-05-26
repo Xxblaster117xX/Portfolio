@@ -1,15 +1,14 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Reagents } from '../interface/IReagents';
 import '../styles/Movement.css';
-
-
+import toast, { Toaster } from 'react-hot-toast';
 export default function Movement() {
     const [reactivos, setReactivos] = useState<Reagents[]>([]);
     const [busqueda, setBusqueda] = useState('');
     const [modalAbierto, setModalAbierto] = useState(false);
     const [reactivoSeleccionado, setReactivoSeleccionado] = useState<Reagents | null>(null);
     const [cantidadGastada, setCantidadGastada] = useState<string>('');
-    const [usuarioId] = useState<number>(1); // Simulado
+    const [usuarioId] = useState<number>(1); // Simulado id de usuario
 
     const cargarReactivos = useCallback(async () => {
         if (!window.electron) return;
@@ -31,6 +30,9 @@ export default function Movement() {
         try {
             await window.electron.marcarReactivoComoEscogido(productId);
             await cargarReactivos();
+            toast.success('Reactivo escogido correctamente');
+            //Cargar el toaster para que no salga como error pero aún así el reactivo se maca con la linea anterior
+            Toaster();
         } catch (error) {
             console.error('Error al marcar reactivo como escogido:', error);
         }
@@ -42,63 +44,74 @@ export default function Movement() {
         setModalAbierto(true);
     }, []);
 
+    //  Conversión robusta para números con punto o coma
+    const parseCantidad = (valor: string | number): number => {
+        if (typeof valor === 'number') return valor;
+        if (typeof valor === 'string') {
+            const limpio = valor.replace(',', '.');
+            const convertido = parseFloat(limpio);
+            return isNaN(convertido) ? NaN : convertido;
+        }
+        return NaN;
+    };
+
+
+    //Maneja la introducción de los reactivos
     const manejarIntroducir = useCallback(async () => {
-    if (!reactivoSeleccionado) return;
+        if (!reactivoSeleccionado) return;
 
-    const cantidadNumerica = parseFloat(cantidadGastada.replace(',', '.'));
-    const cantidadDisponible = parseFloat(
-        String(reactivoSeleccionado.reagentQuantity).replace(',', '.')
-    );
+        const cantidadNumerica = parseCantidad(cantidadGastada);
+        const cantidadDisponible = parseCantidad(reactivoSeleccionado.reagentQuantity);
 
-    console.log('🧪 Valor introducido:', cantidadNumerica);
-    console.log('📦 Cantidad disponible:', cantidadDisponible);
+        console.log(' Valor introducido (crudo):', cantidadGastada);
+        console.log(' Valor introducido (numérico):', cantidadNumerica);
+        console.log(' Cantidad disponible (raw):', reactivoSeleccionado.reagentQuantity);
+        console.log(' Cantidad disponible (numérica):', cantidadDisponible);
+        console.log(' Tipo de cantidad disponible:', typeof reactivoSeleccionado.reagentQuantity);
 
-    if (
-        isNaN(cantidadNumerica) ||
-        cantidadNumerica <= 0 ||
-        cantidadNumerica > cantidadDisponible
-    ) {
-        alert('Por favor, introduce una cantidad válida.');
-        return;
-    }
+        if (
+            isNaN(cantidadNumerica) ||
+            cantidadNumerica <= 0 ||
+            isNaN(cantidadDisponible) ||
+            cantidadNumerica > cantidadDisponible
+        ) {
+            alert('Por favor, introduce una cantidad válida.');
+            return;
+        }
 
-    if (!window.electron) {
-        alert('Funcionalidad no disponible');
-        return;
-    }
+        if (!window.electron) {
+            alert('Funcionalidad no disponible');
+            return;
+        }
 
-    try {
-        console.log('➡ Enviando a Electron:', {
-            reagentId: reactivoSeleccionado.reagentId,
-            cantidad: cantidadNumerica,
-            usuarioId
-        });
+        try {
+            // Log para verificar que los datos se envían correctamente a Electron
+            console.log(' Enviando a Electron:', {
+                reagentId: reactivoSeleccionado.reagentId,
+                cantidad: cantidadNumerica,
+                usuarioId
+            });
 
-        await window.electron.introducirReactivo(
-            reactivoSeleccionado.reagentId,
-            cantidadNumerica,
-            usuarioId
-        );
+            await window.electron.introducirReactivo(
+                reactivoSeleccionado.reagentId,
+                cantidadNumerica,
+                usuarioId
+            );
 
-        setReactivos((prev) =>
-            prev.map((r) =>
-                r.reagentId === reactivoSeleccionado.reagentId
-                    ? {
-                          ...r,
-                          reagentQuantity: cantidadDisponible - cantidadNumerica
-                      }
-                    : r
-            )
-        );
+            await cargarReactivos();
 
-        alert('Movimiento registrado correctamente');
-        setModalAbierto(false);
-        setCantidadGastada('');
-    } catch (error) {
-        console.error('Error al introducir reactivo:', error);
-        alert('Error al registrar el movimiento');
-    }
-}, [reactivoSeleccionado, cantidadGastada, usuarioId]);
+
+            setModalAbierto(false);
+            setCantidadGastada('');
+            toast.success('Reactivo introducido correctamente');
+            console.log(' Reactivo introducido correctamente:', reactivoSeleccionado.reagentName)
+
+
+        } catch (error) {
+            console.error('Error al introducir reactivo:', error);
+            alert('Error al registrar el movimiento');
+        }
+    }, [reactivoSeleccionado, cantidadGastada, usuarioId, cargarReactivos]);
 
 
     const reactivosFiltrados = reactivos.filter((r) =>
@@ -118,7 +131,7 @@ export default function Movement() {
 
             <div className="table-wrapper">
                 <table className="reactivos-table">
-                    <thead>
+                    <thead style={{ color: 'white' }}>
                         <tr>
                             <th>Nombre</th>
                             <th>CAS</th>
@@ -161,14 +174,15 @@ export default function Movement() {
             {modalAbierto && reactivoSeleccionado && (
                 <div className="modal-overlay">
                     <div className="modal-content">
-                        <h2 className="modal-title">Reactivo: {reactivoSeleccionado.reagentName}</h2>
+                        <h2 className="modal-title" style={{ backgroundColor: '#007bff', color: 'white', padding: '10px', borderRadius: '6px 6px 0 0' , marginTop: '0'}}>
+    Reactivo: {reactivoSeleccionado.reagentName}
+</h2>
                         <input
                             type="text"
                             inputMode="decimal"
                             value={cantidadGastada}
                             onChange={(e) => {
                                 const raw = e.target.value;
-                                // Solo números, puntos o comas
                                 if (/^(\d+([.,]\d*)?)?$/.test(raw)) {
                                     setCantidadGastada(raw);
                                 }
@@ -176,6 +190,13 @@ export default function Movement() {
                             className="modal-input"
                             placeholder="Cantidad gastada (ej. 2.5)"
                         />
+                        {/* 🧪 Depuración en pantalla */}
+                        <p style={{ color: 'white', marginTop: '10px' }}>
+                            Cantidad introducida: {cantidadGastada}<br />
+                            Parseada: {parseCantidad(cantidadGastada)}<br />
+                            Disponible: {reactivoSeleccionado.reagentQuantity}
+                        </p>
+
                         <div className="modal-buttons">
                             <button onClick={() => setModalAbierto(false)} className="btn btn-cancel">
                                 Cancelar

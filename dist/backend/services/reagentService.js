@@ -146,8 +146,10 @@ export const marcarReactivoComoEscogido = async (reagentId) => {
 };
 
 // Introducir cantidad gastada y actualizar cantidad total y estado
+// Introducir cantidad gastada y actualizar cantidad total y estado
 export const introducirReactivo = async (reagentId, cantidadGastada, userId) => {
   console.log('introducirReactivo called with:', { reagentId, cantidadGastada, userId });
+
   const cantidadNum = parseFloat(cantidadGastada);
   if (isNaN(cantidadNum) || cantidadNum < 0) throw new Error('Cantidad gastada inválida');
 
@@ -163,8 +165,8 @@ export const introducirReactivo = async (reagentId, cantidadGastada, userId) => 
     throw new Error('Cantidad gastada mayor que la cantidad disponible');
   }
 
-  // Mantener estado 'escogido' si queda cantidad, 'agotado' si 0
-  const nuevoEstado = nuevaCantidad === 0 ? 'agotado' : reactivo.reagentState;
+  // 👇 CAMBIO CLAVE: poner 'disponible' si todavía queda cantidad, 'agotado' si llega a 0
+  const nuevoEstado = nuevaCantidad === 0 ? 'agotado' : 'disponible';
 
   await db.run(
     `UPDATE reagents SET reagent_quantity = ?, reagent_state = ? WHERE reagent_id = ?`,

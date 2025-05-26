@@ -39,6 +39,7 @@ function createMainWindow() {
   });
 
   mainWindow.loadURL('http://localhost:5173');
+  win.webContents.openDevTools();
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -262,15 +263,7 @@ ipcMain.handle('marcar-reactivo-escogido', async (event, reagentId) => {
   }
 });
 
-ipcMain.handle('introducir-reactivo', async (event, { reagentId, cantidadGastada, userId }) => {
-  try {
-    await ReagentService.introducirReactivo(reagentId, cantidadGastada, userId);
-    return { success: true };
-  } catch (error) {
-    console.error('Error introducir-reactivo:', error);
-    return { success: false, message: error.message };
-  }
-});
+
 
 ipcMain.handle('obtener-movimientos-por-producto', async (event, reagentId) => {
   try {
@@ -302,6 +295,17 @@ ipcMain.handle('insertar-reactivo', async (event, data) => {
     return { success: true, id: insertedId };
   } catch (error) {
     console.error('Error insertar-reactivo:', error);
+    return { success: false, message: error.message };
+  }
+});
+
+//Verificar si el reactivo ya ha sido introducido
+ipcMain.handle('introducir-reactivo', async (event, { reagentId, cantidadGastada, userId }) => {
+  try {
+    await ReagentService.introducirReactivo(reagentId, cantidadGastada, userId);
+    return { success: true };
+  } catch (error) {
+    console.error('Error introducir-reactivo:', error);
     return { success: false, message: error.message };
   }
 });
@@ -361,3 +365,4 @@ ipcMain.handle('obtener-historial', async () => {
     return { success: false, message: error.message };
   }
 });
+

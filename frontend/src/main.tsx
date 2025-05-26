@@ -11,6 +11,7 @@ import MainLayout from './components/MainLayout';
 import Reagents from './components/ReagentManager';
 import RutaPrivada from './components/RutaPrivada';
 import Movement from './components/Movement';
+import Historical from './components/Historical';
 
 function App() {
   return (
@@ -29,13 +30,15 @@ function App() {
         <Route element={<RutaPrivada />}>
           <Route element={<MainLayout />}>
             <Route path="/ReagentManager" element={<Reagents />} />
-        <Route path="/Movement" element={<Movement />} />
+          <Route path="/Movement" element={<Movement />} />
+         <Route path="/Historical" element={<Historical />} />
           </Route>
         </Route>
 
         {/* Catch-all */}
         <Route path="*" element={<Navigate to="/ReagentManager" />} />
         <Route path="*" element={<Navigate to="/Movement" />} />
+        <Route path="*" element={<Navigate to="/Historical"/>} />
       </Routes>
     </Router>
   );

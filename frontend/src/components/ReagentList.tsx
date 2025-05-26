@@ -343,7 +343,7 @@ const handleEditConfirm = () => {
                                     </select>
                                 </label>
 
-                                <div style={{ marginTop: '1rem' }}>
+                                <div style={{ marginTop: '5rem' }}>
                                     <button type="button" className="reagent-btn-cancel" onClick={() => setEditingReagent(null)}>Cancelar</button>{' '}
                                     <button type="submit" className="reagent-btn-edit-confirm">Guardar</button>
                                 </div>

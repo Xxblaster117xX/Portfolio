@@ -1,4 +1,5 @@
 import { db } from '../database/connection.js';
+import * as HistoricalService from './historicalService.js'; // Importa el servicio histórico
 
 // Validaciones
 const verificarCantidadValida = (cantidad) => {
@@ -44,6 +45,14 @@ export const registrarMovimiento = async (
   ]);
 
   console.log(`Movimiento registrado: Reactivo ID ${reagentId}, Tipo: ${movementType}`);
+
+  // Registrar acción histórica relacionada
+  await HistoricalService.registrarAccionHistorica(
+    userId,
+    'Movimiento registrado',
+    new Date().toISOString(),
+    `Reactivo ID: ${reagentId}, Tipo: ${movementType}, Cantidad: ${movementQuantity} ${unit}, Antes: ${quantityBefore}, Después: ${quantityAfter}, Descripción: ${description}`
+  );
 };
 
 // Obtener todos los movimientos
