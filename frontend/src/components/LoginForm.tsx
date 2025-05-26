@@ -9,6 +9,7 @@ export default function LoginForm() {
   const navigate = useNavigate();
 
   type Usuario = {
+    id: number;
   nombre: string;
   correo: string;
   rol: string;
@@ -27,12 +28,12 @@ type RespuestaLogin = {
       userGmail,
       userPassword,
     }) as RespuestaLogin;
- console.log('Respuesta login:', response);  // <-- Añade esto
+ console.log('Respuesta login:', response);  
     if (response.success && response.user) {
      console.log('Usuario iniciado con éxito', response.user)
       localStorage.setItem('usuario', JSON.stringify(response.user)); // Guarda usuario para que aparezca en el sidebar
       setMessage('');
-      navigate('/Sidebar'); // Redirige al sidebar: Cambiar ruta por la del sidebar
+      navigate('/Sidebar'); // Redirige al sidebar
     } else {
       setMessage(response.message || 'Fallo en el inicio de sesión.');
     }

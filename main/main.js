@@ -176,6 +176,7 @@ ipcMain.handle('iniciar-sesion', async (event, { userGmail, userPassword }) => {
   success: true,
   message: 'Inicio de sesión exitoso.',
   user: {
+    id: usuario.user_id,
     nombre: usuario.user_name,
     correo: usuario.user_gmail,
     rol: usuario.rol
@@ -347,8 +348,8 @@ ipcMain.handle('eliminar-reactivo', async (event, reagentId) => {
 // HISTORIAL
 ipcMain.handle('registrar-historial', async (event, data) => {
   try {
-    const { historicalUserId, action, actionDate, details } = data;
-    await HistoricalService.registrarAccionHistorica(historicalUserId, action, actionDate, details);
+    const { historicalUserId,historicalUserName ,action, actionDate, details } = data;
+    await HistoricalService.registrarAccionHistorica(historicalUserId, historicalUserName,action, actionDate, details);
     return { success: true };
   } catch (error) {
     console.error('Error registrar-historial:', error);

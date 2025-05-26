@@ -85,6 +85,7 @@ async function crearTablas() {
         CREATE TABLE IF NOT EXISTS historical (
             historical_id INTEGER PRIMARY KEY,
             historical_user_id INTEGER NOT NULL,
+            historical_user_name TEXT NOT NULL,
             action TEXT NOT NULL,
             action_date TEXT NOT NULL,
             details TEXT,

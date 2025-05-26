@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { IHistorical } from '../interface/IHistorical';
+import '../styles/historical.css';
 
 type HistoricalRaw = {
   historical_id: number;
   historical_user_id: number;
+  historical_user_name: string;
   action: string;
-  action_date: string;  // viene como string del backend
+  action_date: string;
   details: string;
 };
 
 const mapHistoricalToPascalCase = (h: HistoricalRaw): IHistorical => ({
   HistoricalId: h.historical_id,
+  historicalUsername: h.historical_user_name,
   HistoricalUserId: h.historical_user_id,
   Action: h.action,
   ActionDate: new Date(h.action_date),
@@ -21,6 +24,7 @@ const Historical: React.FC = () => {
   const [historial, setHistorial] = useState<IHistorical[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchHistorial = async () => {
@@ -34,11 +38,7 @@ const Historical: React.FC = () => {
           setError(response.message ?? 'Error al obtener historial');
         }
       } catch (e: unknown) {
-        if (e instanceof Error) {
-          setError(e.message);
-        } else {
-          setError('Error desconocido');
-        }
+        setError(e instanceof Error ? e.message : 'Error desconocido');
       } finally {
         setLoading(false);
       }
@@ -47,49 +47,58 @@ const Historical: React.FC = () => {
     fetchHistorial();
   }, []);
 
+  const filteredHistorial = historial.filter((item) => {
+    const search = searchTerm.toLowerCase();
+    return (
+      item.HistoricalId.toString().includes(search) ||
+      item.HistoricalUserId.toString().includes(search) ||
+      item.historicalUsername.toLowerCase().includes(search) ||
+      item.Action.toLowerCase().includes(search) ||
+      item.ActionDate.toLocaleString().toLowerCase().includes(search) ||
+      item.Details.toLowerCase().includes(search)
+    );
+  });
+
   if (loading) return <p>Cargando historial...</p>;
-  if (error) return <p style={{ color: 'red' }}>{error}</p>;
+  if (error) return <p className="error">{error}</p>;
   if (historial.length === 0) return <p>No hay acciones históricas para mostrar.</p>;
 
   return (
-    <div>
+    <div className="historial-container">
       <h2>Historial de Acciones</h2>
-      <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+      <input
+        type="text"
+        placeholder="Buscar..."
+        className="search-input"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <table className="historial-table">
         <thead>
           <tr>
-            <th style={thStyle}>ID</th>
-            <th style={thStyle}>ID Usuario</th>
-            <th style={thStyle}>Acción</th>
-            <th style={thStyle}>Fecha</th>
-            <th style={thStyle}>Detalles</th>
+            <th>ID</th>
+            <th>ID Usuario</th>
+            <th>Nombre Usuario</th>
+            <th>Acción</th>
+            <th>Fecha</th>
+            <th>Detalles</th>
           </tr>
         </thead>
         <tbody>
-          {historial.map(item => (
+          {filteredHistorial.map((item) => (
             <tr key={item.HistoricalId}>
-              <td style={tdStyle}>{item.HistoricalId}</td>
-              <td style={tdStyle}>{item.HistoricalUserId}</td>
-              <td style={tdStyle}>{item.Action}</td>
-              <td style={tdStyle}>{item.ActionDate.toLocaleString()}</td>
-              <td style={tdStyle}>{item.Details}</td>
+              <td>{item.HistoricalId}</td>
+              <td>{item.HistoricalUserId}</td>
+              <td>{item.historicalUsername}</td>
+              <td>{item.Action}</td>
+              <td>{item.ActionDate.toLocaleString()}</td>
+              <td>{item.Details}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
   );
-};
-
-const thStyle: React.CSSProperties = {
-  border: '1px solid #ddd',
-  padding: '8px',
-  backgroundColor: '#f2f2f2',
-  textAlign: 'left',
-};
-
-const tdStyle: React.CSSProperties = {
-  border: '1px solid #ddd',
-  padding: '8px',
 };
 
 export default Historical;

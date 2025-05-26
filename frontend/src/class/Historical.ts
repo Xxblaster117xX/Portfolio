@@ -7,12 +7,14 @@ export class Historical implements IHistorical {
     
     HistoricalId:number;
     HistoricalUserId:number;
+    historicalUsername:string
     Action:string;
     ActionDate:Date;
     Details:string;
 // Constructor
-    constructor(HistoricalId:number, HistoricalUserId:number, Action:string, ActionDate:Date, Details:string) {
+    constructor(HistoricalId:number, historicalUsername:string ,HistoricalUserId:number, Action:string, ActionDate:Date, Details:string) {
         this.HistoricalId = HistoricalId;
+        this.historicalUsername = historicalUsername;
         this.HistoricalUserId = HistoricalUserId;
         this.Action = Action;
         this.ActionDate = ActionDate;
@@ -21,6 +23,9 @@ export class Historical implements IHistorical {
     // Getters
     public getHistoricalId(): number {
         return this.HistoricalId;
+    }
+    public getHistoricalUserName(): string {
+        return this.historicalUsername;
     }
     public getHistoricalUserId(): number {
         return this.HistoricalUserId;
@@ -37,6 +42,9 @@ export class Historical implements IHistorical {
     // Setters
     public setHistoricalId(HistoricalId: number): void {
         this.HistoricalId = HistoricalId;
+    }
+    public setHistoricalUserName(historicalUsername: string): void {
+        this.historicalUsername = historicalUsername;
     }
     public setHistoricalUserId(HistoricalUserId: number): void {
         this.HistoricalUserId = HistoricalUserId;

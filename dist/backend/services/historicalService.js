@@ -9,13 +9,13 @@ const validarFecha = (fecha) => {
 };
 
 // Registrar una acción histórica
-export const registrarAccionHistorica = async (historicalUserId, action, actionDate, details) => {
+export const registrarAccionHistorica = async (historicalUserId, historical_user_name, action, actionDate, details) => {
   validarFecha(actionDate);
 
   await db.run(`
-    INSERT INTO historical (historical_user_id, action, action_date, details)
-    VALUES (?, ?, ?, ?)
-  `, [historicalUserId, action, actionDate, details]);
+    INSERT INTO historical (historical_user_id, historical_user_name, action, action_date, details)
+    VALUES (?, ?, ?, ?, ?)
+  `, [historicalUserId, historical_user_name, action, actionDate, details]);
 
   console.log(`Acción histórica registrada: Usuario ${historicalUserId}, Acción: ${action}`);
 };

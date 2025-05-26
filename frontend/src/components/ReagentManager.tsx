@@ -5,6 +5,7 @@ import ReagentList from './ReagentList';
 import { Reagents } from '../interface/IReagents';
 import '../styles/Reagent.css';
 export type ReagentState = 'disponible' | 'escogido';
+import { obtenerUsuario } from '../utils/auth'; 
 
 export default function ReagentManager() {
   const [reagents, setReagents] = useState<Reagents[]>([]);
@@ -18,22 +19,33 @@ export default function ReagentManager() {
     reagentSupplier: '',
     reagentType: '',
     reagentFDS: '',
-    reagentState: 'disponible', // Asignar un valor por defecto
+    reagentState: 'disponible',
   });
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [showPopup, setShowPopup] = useState(false); // popup creación
-
-  // Estado para el reactivo que se está editando (popup edición)
+  const [showPopup, setShowPopup] = useState(false);
   const [editingReagent, setEditingReagent] = useState<Reagents | null>(null);
+ 
+const [usuarioId, setUsuarioId] = useState<number>(0);
+const [usuarioNombre, setUsuarioNombre] = useState<string>('');
+  
+
+useEffect(() => {
+    const usuario = obtenerUsuario();
+    if (usuario) { 
+      setUsuarioId(usuario.id);
+      setUsuarioNombre(usuario.nombre);
+    }
+  }, []);
 
   const formatDate = (date: Date | string) => {
     const d = new Date(date);
     if (isNaN(d.getTime())) return '';
     return d.toISOString().slice(0, 10);
   };
+
   const loadReagents = async () => {
     setLoading(true);
     setError(null);
@@ -51,7 +63,7 @@ export default function ReagentManager() {
           reagentSupplier: r.reagentSupplier || '',
           reagentType: r.reagentType || '',
           reagentFDS: r.reagentFDS || '',
-          reagentState: r.reagentState || 'disponible', // Asignar un valor por defecto
+          reagentState: r.reagentState || 'disponible',
         }));
         setReagents(parsed);
       } else {
@@ -75,10 +87,11 @@ export default function ReagentManager() {
       reagentSupplier: '',
       reagentType: '',
       reagentFDS: '',
-      reagentState: 'disponible', 
+      reagentState: 'disponible',
     });
     setError(null);
   };
+
   const handleCreate = async () => {
     setLoading(true);
     setError(null);
@@ -90,6 +103,16 @@ export default function ReagentManager() {
       });
       if (res.success) {
         await loadReagents();
+
+        //  REGISTRO HISTORIAL: Crear reactivo
+        await window.electron.registrarHistorial({
+          historicalUserId: usuarioId,
+         historicalUserName: usuarioNombre,
+          action: 'Crear reactivo',
+          actionDate: new Date().toISOString(),
+          details: `Reactivo "${form.reagentName}" creado con CAS ${form.reagentCas}`,
+        });
+
         resetForm();
         setShowPopup(true);
         setTimeout(() => {
@@ -112,11 +135,16 @@ export default function ReagentManager() {
       const res = await window.electron.eliminarReactivo(id);
       if (res.success) {
         await loadReagents();
-        toast.success('Reactivo eliminado correctamente', {
-          icon: '🔥',
+        toast.success('Reactivo eliminado correctamente', { icon: '🔥' });
+
+        //  REGISTRO HISTORIAL: Eliminar reactivo
+        await window.electron.registrarHistorial({
+          historicalUserId: usuarioId,
+         historicalUserName: usuarioNombre,
+          action: 'Eliminar reactivo',
+          actionDate: new Date().toISOString(),
+          details: `Reactivo con ID ${id} fue eliminado`,
         });
-        //Para que no ocurra error con la importación del toast
-        <Toaster className="succ"></Toaster>
       } else {
         setError(res.message || 'Error al eliminar reactivo');
       }
@@ -127,7 +155,6 @@ export default function ReagentManager() {
     setLoading(false);
   };
 
-  // Nueva función para actualizar reactivo
   const handleEdit = async (updatedReagent: Reagents) => {
     setLoading(true);
     setError(null);
@@ -139,6 +166,16 @@ export default function ReagentManager() {
       });
       if (res.success) {
         await loadReagents();
+
+        //  REGISTRO HISTORIAL: Editar reactivo
+        await window.electron.registrarHistorial({
+          historicalUserId: usuarioId,
+        historicalUserName: usuarioNombre,
+          action: 'Editar reactivo',
+          actionDate: new Date().toISOString(),
+          details: `Reactivo "${updatedReagent.reagentName}" (ID: ${updatedReagent.reagentId}) actualizado`,
+        });
+
         toast.success('Reactivo actualizado correctamente');
       } else {
         setError(res.message || 'Error al actualizar reactivo');
@@ -148,17 +185,16 @@ export default function ReagentManager() {
       setError('Error en el servidor al actualizar reactivo');
     }
     setLoading(false);
-    setEditingReagent(null); // Cerrar popup edición
+    setEditingReagent(null);
   };
 
-  // Función para manejar confirmación popup creación
   const onPopupConfirm = () => {
     setShowPopup(false);
     setShowForm(false);
     toast.success('Reactivo creado con éxito');
+    Toaster();
   };
 
-  // Función para manejar cancelación popup creación (seguir creando)
   const onPopupCancel = () => {
     setShowPopup(false);
     toast.success('Reactivo creado con éxito');
@@ -225,8 +261,6 @@ export default function ReagentManager() {
           </div>
         </div>
       )}
-
-    
     </div>
   );
 }

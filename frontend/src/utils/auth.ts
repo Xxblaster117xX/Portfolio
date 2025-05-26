@@ -1,5 +1,5 @@
-// utils/auth.ts
 
+// utils/auth.ts
 // Devuelve el usuario desde localStorage
 export function obtenerUsuario() {
   const user = localStorage.getItem('usuario');
@@ -9,5 +9,5 @@ export function obtenerUsuario() {
 // Elimina el usuario y redirige al login
 export function cerrarSesion() {
   localStorage.removeItem('usuario');
-  window.location.href = '/LoginForm'; // Ajusta si usas navegación con useNavigate
+  window.location.href = '/LoginForm'; 
 }

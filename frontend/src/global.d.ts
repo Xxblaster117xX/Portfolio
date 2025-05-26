@@ -75,6 +75,7 @@ declare global {
       // Historial
       registrarHistorial: (data: {
         historicalUserId: number;
+        historicalUserName: string;
         action: string;
         actionDate: string;
         details: string;
