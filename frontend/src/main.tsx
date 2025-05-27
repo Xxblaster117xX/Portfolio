@@ -12,6 +12,8 @@ import Reagents from './components/ReagentManager';
 import RutaPrivada from './components/RutaPrivada';
 import Movement from './components/Movement';
 import Historical from './components/Historical';
+import AdminUsers from './components/AdminUsers';
+
 
 function App() {
   return (
@@ -32,6 +34,7 @@ function App() {
             <Route path="/ReagentManager" element={<Reagents />} />
           <Route path="/Movement" element={<Movement />} />
          <Route path="/Historical" element={<Historical />} />
+         <Route path="/AdminUsers" element={<AdminUsers />} />
           </Route>
         </Route>
 

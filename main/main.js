@@ -367,3 +367,24 @@ ipcMain.handle('obtener-historial', async () => {
   }
 });
 
+// USUARIOS
+ipcMain.handle('obtener-usuarios', async () => {
+  try {
+    const usuarios = await UserService.obtenerUsuarios();
+    return { success: true, data: usuarios };
+  } catch (error) {
+    console.error('Error obtener-usuarios:', error);
+    return { success: false, message: error.message };
+  }
+});
+
+ipcMain.handle('eliminar-usuario', async (event, userId) => {
+  try {
+    await UserService.eliminarUsuario(userId);
+    return { success: true };
+  } catch (error) {
+    console.error('Error eliminar-usuario:', error);
+    return { success: false, message: error.message };
+  }
+});
+

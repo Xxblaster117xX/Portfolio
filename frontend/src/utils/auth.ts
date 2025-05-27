@@ -11,3 +11,8 @@ export function cerrarSesion() {
   localStorage.removeItem('usuario');
   window.location.href = '/LoginForm'; 
 }
+// Guardar el rol en localStorage
+export function guardarUsuario(usuario: { nombre: string; correo: string; rol: string }) {
+  localStorage.setItem('usuario', JSON.stringify(usuario));
+}
+

@@ -106,7 +106,6 @@ export default function RegisterForm() {
         </select>
         <button className="form-button" type="submit">Registrar</button>
       </form>
-
       {message && <p className="form-message">{message}</p>}
       <Link to="/" className="home-button">← Volver al inicio</Link>
     </div>

@@ -141,7 +141,7 @@ class UserService {
     return !!usuario && usuario.isVerified;
   }
 
-  // NUEVO: Verifica si ya existe alguien registrado (sin importar si está verificado)
+  
   static async usuarioYaRegistrado(userGmail) {
     const usuario = await this.obtenerUsuarioPorGmail(userGmail);
     return !!usuario;

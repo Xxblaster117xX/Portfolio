@@ -1,6 +1,6 @@
 // VerifyCodeForm.tsx
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import '../styles/VerifyCodeForm.css';
 
 export default function VerifyCodeForm() {
@@ -41,7 +41,9 @@ export default function VerifyCodeForm() {
         />
         <button className="verify-button" type="submit">Verificar</button>
         {message && <p className="verify-message">{message}</p>}
+        <Link to="/" className="home-button">← Volver al inicio</Link>
       </form>
+
     </div>
   );
 }
