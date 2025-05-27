@@ -1,10 +1,11 @@
 /* Fondo general */
 .app-background {
   min-height: 100vh;
-  background: linear-gradient(to right, #e0eafc, #cfdef3);
+  background: transparent; /* Transparente para dejar ver el Vanta.js */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
   flex-direction: column;
+  color: #004080; /* texto base en azul oscuro para mejor contraste */
 }
 
 /* Navbar */
@@ -12,16 +13,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #004080;
+  background-color: rgba(0, 64, 128, 0.85); /* Azul oscuro semi-transparente para que se integre */
   color: white;
   padding: 20px 40px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); /* sombra un poco más marcada */
+  backdrop-filter: blur(6px); /* efecto vidrio para modernidad */
+  border-radius: 0 0 12px 12px;
 }
 
+/* Navbar título */
 .navbar h1 {
   font-size: 24px;
   font-weight: bold;
   margin: 0;
+  color: white;
 }
 
 /* Botones de navegación */
@@ -32,17 +37,19 @@
 
 .nav-buttons button {
   padding: 10px 20px;
-  background-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.9); /* blanco semi-transparente */
   color: #004080;
   font-weight: bold;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 64, 128, 0.2);
 }
 
 .nav-buttons button:hover {
   background-color: #dbe9ff;
+  box-shadow: 0 4px 12px rgba(0, 64, 128, 0.3);
 }
 
 /* Contenido principal */
@@ -53,9 +60,11 @@
   justify-content: center;
   text-align: center;
   padding: 60px 20px;
+  color: white; /* azul más oscuro para el texto */
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.7); /* sutil sombra clara para mejorar legibilidad */
 }
 
 .main-content h1 {
   font-size: 32px;
-  color: #333;
+  margin: 0;
 }

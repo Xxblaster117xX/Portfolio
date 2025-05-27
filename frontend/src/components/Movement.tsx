@@ -60,7 +60,7 @@ const [usuarioNombre, setUsuarioNombre] = useState<string>('');
     } catch (error) {
       console.error('Error al marcar reactivo como escogido:', error);
     }
-  }, [cargarReactivos, usuarioId]); 
+  }, [cargarReactivos, usuarioId, usuarioNombre]); 
 
   const manejarAbrirModal = useCallback((reactivo: Reagents) => {
     setReactivoSeleccionado(reactivo);
@@ -128,7 +128,7 @@ const [usuarioNombre, setUsuarioNombre] = useState<string>('');
       console.error('Error al introducir reactivo:', error);
       alert('Error al registrar el movimiento');
     }
-  }, [reactivoSeleccionado, cantidadGastada, usuarioId, cargarReactivos]);
+  }, [reactivoSeleccionado, cantidadGastada, usuarioId, usuarioNombre,cargarReactivos]);
 
   const reactivosFiltrados = reactivos.filter((r) =>
     r.reagentName.toLowerCase().includes(busqueda.toLowerCase())

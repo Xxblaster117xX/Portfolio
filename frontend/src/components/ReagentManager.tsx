@@ -205,6 +205,9 @@ useEffect(() => {
   }, []);
 
   return (
+    <>   
+    
+
     <div className="reagent-container">
       <div className="tabs">
         <button
@@ -262,5 +265,6 @@ useEffect(() => {
         </div>
       )}
     </div>
+     </>
   );
 }

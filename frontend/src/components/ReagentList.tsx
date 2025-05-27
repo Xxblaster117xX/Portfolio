@@ -118,7 +118,9 @@ const handleEditConfirm = () => {
 };
 //Interfaz
     return (
-        <> <div className="reagent-search-container">
+        <>
+        
+         <div className="reagent-search-container">
             <input
                 type="text"
                 placeholder="Buscar reactivo..."
