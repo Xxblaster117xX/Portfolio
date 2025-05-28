@@ -5,8 +5,10 @@ import { Historial } from '../interface/IHistorial';
 declare global {
   interface Window {
     electron: {
-      obtenerUsuarios(): unknown;
-      eliminarUsuario(userId: number): unknown;
+//Usuario
+
+      obtenerUsuarios(): Promise<{ success: boolean; data: Usuario[]; message?: string }>;
+      eliminarUsuario(userId: number): Promise<{ success: boolean; message?: string }>;
       registrarUsuario: (data: { 
         userName: string; 
         userGmail: string; 

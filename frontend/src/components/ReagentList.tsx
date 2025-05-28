@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Reagents } from '../interface/IReagents';
 import '../styles/SearchReagent.css'
+import Papa from 'papaparse'
+
+
+
 
 export type ReagentState = 'disponible' | 'escogido';
 interface Props {
@@ -99,6 +103,44 @@ const ReagentList: React.FC<Props> = ({
         return matchesText && matchesAddDate && matchesExpDate;
     });
 
+    const handleExportCSV = (data: Reagents[]) => {
+        const csvHeaders = [
+            'ID', 'CAS', 'Nombre', 'Cantidad', 'Unidad',
+            'Fecha Adición', 'Fecha Expiración', 'Proveedor', 'Tipo', 'FDS', 'Estado'
+        ];
+
+        const csvRows = data.map(r => [
+            r.reagentId,
+            r.reagentCas,
+            r.reagentName,
+            r.reagentQuantity,
+            r.reagentUnit,
+            formatDate(r.reagentAddDate),
+            formatDate(r.reagentExpirationDate),
+            r.reagentSupplier,
+            r.reagentType,
+            r.reagentFDS,
+            r.reagentState
+        ]);
+
+        const csvContent = [
+            csvHeaders.join(','),
+            ...csvRows.map(row =>
+                row.map(field => `"${String(field).replace(/"/g, '""')}"`).join(',')
+            )
+        ].join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'reactivos.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+
     const handleConfirmDelete = () => {
         if (idToDelete !== null) {
             onDelete(idToDelete);
@@ -106,66 +148,72 @@ const ReagentList: React.FC<Props> = ({
             setShowDeletePopup(false);
         }
     };
-const handleEditConfirm = () => {
-  if (!editingReagent) return;
-  const updated: Reagents = {
-    reagentId: editingReagent.reagentId,
-    ...editForm,
-    reagentState: editForm.reagentState || 'disponible', 
-  };
-  onEdit(updated);
-  setEditingReagent(null);
-};
-//Interfaz
+    const handleEditConfirm = () => {
+        if (!editingReagent) return;
+        const updated: Reagents = {
+            reagentId: editingReagent.reagentId,
+            ...editForm,
+            reagentState: editForm.reagentState || 'disponible',
+        };
+        onEdit(updated);
+        setEditingReagent(null);
+    };
+    //Interfaz
     return (
         <>
-        
-         <div className="reagent-search-container">
-            <input
-                type="text"
-                placeholder="Buscar reactivo..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="reagent-input"
-            />
+            <h1 className='title'>Gestión de reactivos</h1>
+            <div className="reagent-search-container">
+                <input
+                    type="text"
+                    placeholder="Buscar reactivo..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="reagent-input"
+                />
 
-            <div className="reagent-checkbox-container">
-                <div className="reagent-filter-checkboxes">
-                    {filterFields.map((field) => (
-                        <label key={field} className="checkbox-label">
-                            <input
-                                type="checkbox"
-                                checked={selectedFields.includes(field)}
-                                onChange={() => toggleFilterField(field)}
-                            />
-                            {field.replace('reagent', '')}
-                        </label>
-                    ))}
+                <div className="reagent-checkbox-container">
+                    <div className="reagent-filter-checkboxes">
+                        {filterFields.map((field) => (
+                            <label key={field} className="checkbox-label">
+                                <input
+                                    type="checkbox"
+                                    checked={selectedFields.includes(field)}
+                                    onChange={() => toggleFilterField(field)}
+                                />
+                                {field.replace('reagent', '')}
+                            </label>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="reagent-date-filters">
+                    <div className="date-filter">
+                        <label>Ingreso desde:</label>
+                        <input type="date" value={addDateFrom} onChange={e => setAddDateFrom(e.target.value)} />
+                    </div>
+                    <div className="date-filter">
+                        <label>Ingreso hasta:</label>
+                        <input type="date" value={addDateTo} onChange={e => setAddDateTo(e.target.value)} />
+                    </div>
+                    <div className="date-filter">
+                        <label>Expira desde:</label>
+                        <input type="date" value={expDateFrom} onChange={e => setExpDateFrom(e.target.value)} />
+                    </div>
+                    <div className="date-filter">
+                        <label>Expira hasta:</label>
+                        <input type="date" value={expDateTo} onChange={e => setExpDateTo(e.target.value)} />
+                    </div>
                 </div>
             </div>
 
-            <div className="reagent-date-filters">
-                <div className="date-filter">
-                    <label>Ingreso desde:</label>
-                    <input type="date" value={addDateFrom} onChange={e => setAddDateFrom(e.target.value)} />
-                </div>
-                <div className="date-filter">
-                    <label>Ingreso hasta:</label>
-                    <input type="date" value={addDateTo} onChange={e => setAddDateTo(e.target.value)} />
-                </div>
-                <div className="date-filter">
-                    <label>Expira desde:</label>
-                    <input type="date" value={expDateFrom} onChange={e => setExpDateFrom(e.target.value)} />
-                </div>
-                <div className="date-filter">
-                    <label>Expira hasta:</label>
-                    <input type="date" value={expDateTo} onChange={e => setExpDateTo(e.target.value)} />
-                </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem', marginRight: '1rem' }}>
+                <button
+                    className="btn-export"
+                    onClick={() => handleExportCSV(filtered)}>
+
+                    Exportar CSV
+                </button>
             </div>
-        </div>
-
-
-
 
             <table className="reagent-table">
                 <thead>
@@ -356,7 +404,6 @@ const handleEditConfirm = () => {
             )}
         </>
     );
-
 };
 
 export default ReagentList;

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { IHistorical } from '../interface/IHistorical';
 import '../styles/historical.css';
+import Papa from 'papaparse';
 
 type HistoricalRaw = {
   historical_id: number;
@@ -59,20 +60,49 @@ const Historical: React.FC = () => {
     );
   });
 
+  const exportToCSV = () => {
+    const csvData = filteredHistorial.map(item => ({
+      ID: item.HistoricalId,
+      'ID Usuario': item.HistoricalUserId,
+      'Nombre Usuario': item.historicalUsername,
+      Acción: item.Action,
+      Fecha: item.ActionDate.toLocaleString(),
+      Detalles: item.Details,
+    }));
+
+    const csv = Papa.unparse(csvData);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.setAttribute('download', 'historial.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   if (loading) return <p>Cargando historial...</p>;
   if (error) return <p className="error">{error}</p>;
   if (historial.length === 0) return <p>No hay acciones históricas para mostrar.</p>;
 
   return (
     <div className="historial-container">
-      <h2>Historial de Acciones</h2>
-      <input
-        type="text"
-        placeholder="Buscar..."
-        className="search-input"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+      <h2 className='title'>Historial de Acciones</h2>
+
+      <div className="historial-controls">
+        <input
+          type="text"
+          placeholder="Buscar registro de historial..."
+          className="search-input"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button className="export-button" onClick={exportToCSV}>
+          Exportar CSV
+        </button>
+      </div>
+
       <table className="historial-table">
         <thead>
           <tr>

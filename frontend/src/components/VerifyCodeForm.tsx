@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import '../styles/VerifyCodeForm.css';
-
+import VantaBackground from "../components/Effects/VantaBackground"; 
 export default function VerifyCodeForm() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -28,6 +28,8 @@ export default function VerifyCodeForm() {
   };
 
   return (
+    <>    
+    <VantaBackground/>
     <div className="verify-container">
       <form onSubmit={handleVerify} className="verify-form">
         <h1 className="verify-title">Verificar Código</h1>
@@ -45,5 +47,6 @@ export default function VerifyCodeForm() {
       </form>
 
     </div>
+    </>
   );
 }

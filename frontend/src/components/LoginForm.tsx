@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/LoginForm.css';
 import VantaBackground from "../components/Effects/VantaGlobe";
-import { rol } from '../enum/RolEnum'; // Importar el enum
+import { rol } from '../enum/RolEnum'; 
 
 export default function LoginForm() {
   const [userGmail, setUserGmail] = useState('');
@@ -14,7 +14,7 @@ export default function LoginForm() {
     id: number;
     nombre: string;
     correo: string;
-    rol: rol; // Usamos el enum aquí
+    rol: rol; 
   };
 
   type RespuestaLogin = {
@@ -24,7 +24,7 @@ export default function LoginForm() {
       id: number;
       nombre: string;
       correo: string;
-      rol: string; // puede venir mal del backend
+      rol: string; 
     };
   };
 

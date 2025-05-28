@@ -4,6 +4,8 @@ import ReagentForm from './ReagentForm';
 import ReagentList from './ReagentList';
 import { Reagents } from '../interface/IReagents';
 import '../styles/Reagent.css';
+
+
 export type ReagentState = 'disponible' | 'escogido';
 import { obtenerUsuario } from '../utils/auth'; 
 
@@ -206,7 +208,7 @@ useEffect(() => {
 
   return (
     <>   
-    
+ 
 
     <div className="reagent-container">
       <div className="tabs">

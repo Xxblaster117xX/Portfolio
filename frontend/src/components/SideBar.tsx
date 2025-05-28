@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { obtenerUsuario, cerrarSesion } from '../utils/auth';
 import '../styles/SideBar.css';
-import { rol } from '../enum/RolEnum'; // Enum importado correctamente
+import { rol } from '../enum/RolEnum';
 
-// Define tipo con el enum rol
 type Usuario = {
   nombre: string;
   correo: string;
@@ -14,6 +13,7 @@ type Usuario = {
 export default function Sidebar() {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const navigate = useNavigate();
+  const location = useLocation(); // <-- Aquí
 
   useEffect(() => {
     const user = obtenerUsuario();
@@ -29,15 +29,26 @@ export default function Sidebar() {
   const renderMenu = () => {
     if (!usuario) return null;
 
+    const navItem = (path: string, label: string) => (
+      <li>
+        <button
+          className={location.pathname === path ? 'active' : ''}
+          onClick={() => handleNavigation(path)}
+        >
+          {label}
+        </button>
+      </li>
+    );
+
     switch (usuario.rol) {
       case rol.ADMINISTRADOR:
         return (
           <nav className="sidebar-nav">
             <ul>
-              <li><button onClick={() => handleNavigation('/ReagentManager')}>Reactivos</button></li>
-              <li><button onClick={() => handleNavigation('/Movement')}>Movimientos</button></li>
-              <li><button onClick={() => handleNavigation('/Historical')}>Historial</button></li>
-              <li><button onClick={() => handleNavigation('/AdminUsers')}>Administrar Usuarios</button></li>
+              {navItem('/ReagentManager', 'Reactivos')}
+              {navItem('/Movement', 'Movimientos')}
+              {navItem('/Historical', 'Historial')}
+              {navItem('/AdminUsers', 'Administrar Usuarios')}
             </ul>
           </nav>
         );
@@ -47,9 +58,9 @@ export default function Sidebar() {
         return (
           <nav className="sidebar-nav">
             <ul>
-              <li><button onClick={() => handleNavigation('/ReagentManager')}>Reactivos</button></li>
-              <li><button onClick={() => handleNavigation('/Movement')}>Movimientos</button></li>
-              <li><button onClick={() => handleNavigation('/Historical')}>Historial</button></li>
+              {navItem('/ReagentManager', 'Reactivos')}
+              {navItem('/Movement', 'Movimientos')}
+              {navItem('/Historical', 'Historial')}
             </ul>
           </nav>
         );
@@ -58,7 +69,6 @@ export default function Sidebar() {
         return <p>No tienes permisos para acceder a esta sección.</p>;
     }
   };
-
   return (
     <div className="sidebar-container">
       <div className="sidebar-user-info">
