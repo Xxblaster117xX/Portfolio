@@ -8,6 +8,9 @@ declare global {
 //Usuario
 
       obtenerUsuarios(): Promise<{ success: boolean; data: Usuario[]; message?: string }>;
+verificarCorreoExiste: (userGmail: string) => Promise<{ exists: boolean }>;
+      actualizarContrasena: (userGmail: number, nuevaContraseña: string) => Promise<{ success: boolean; message: string }>;
+
       eliminarUsuario(userId: number): Promise<{ success: boolean; message?: string }>;
       registrarUsuario: (data: { 
         userName: string; 
@@ -26,6 +29,7 @@ declare global {
         userPassword: string; 
       }) => Promise<{ success: boolean; message: string }>;
 
+      //Reactivos
       obtenerReactivos: () => Promise<{
         success: boolean;
         data: Reagents[]; 

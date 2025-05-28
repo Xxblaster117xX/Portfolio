@@ -5,8 +5,6 @@ import express from 'express';
 import * as MovementService from '../dist/backend/services/movementService.js';
 import * as ReagentService from '../dist/backend/services/reagentService.js';
 import * as HistoricalService from '../dist/backend/services/historicalService.js';
-//import forgotPasswordRouter from '../dist/backend/services/forgot-password.js';
-//import resetPasswordRouter from '../dist/backend/services/reset-password.js';
 import UserService from '../dist/backend/services/userService.js';
 import {
   enviarCodigoVerificacion,
@@ -387,4 +385,25 @@ ipcMain.handle('eliminar-usuario', async (event, userId) => {
     return { success: false, message: error.message };
   }
 });
+
+ipcMain.handle('verificarCorreoExiste', async (event, correo) => {
+  try {
+    const usuario = await UserService.obtenerUsuarioPorGmail(correo);
+    return usuario ? { exists: true } : { exists: false };
+  } catch (error) {
+    console.error('Error al verificar si el correo existe:', error);
+    return { exists: false, error: error.message };
+  }
+});
+
+ipcMain.handle('actualizar-contrasena', async (event, { userGmail, nuevaContraseña }) => {
+  try {
+    await UserService.actualizarContrasena(userGmail, nuevaContraseña);
+    return { success: true, message: 'Contraseña actualizada correctamente.' };
+  } catch (error) {
+    console.error('Error al actualizar contraseña:', error);
+    return { success: false, message: error.message || 'No se pudo actualizar la contraseña.' };
+  }
+});
+
 

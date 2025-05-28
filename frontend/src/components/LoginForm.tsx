@@ -72,7 +72,7 @@ export default function LoginForm() {
   };
 
   const handleRecoverPassword = () => {
-    alert('Funcionalidad de recuperación de contraseña aún no implementada.');
+    navigate('/IntroduceEmail');
   };
 
   return (

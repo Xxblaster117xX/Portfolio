@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Reagents } from '../interface/IReagents';
 import '../styles/SearchReagent.css'
-import Papa from 'papaparse'
+
 
 
 
@@ -158,7 +158,7 @@ const ReagentList: React.FC<Props> = ({
         onEdit(updated);
         setEditingReagent(null);
     };
-    //Interfaz
+    
     return (
         <>
             <h1 className='title'>Gestión de reactivos</h1>
