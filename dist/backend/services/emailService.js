@@ -11,8 +11,8 @@ console.log('process.env: ', process.env)
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.CORREO_ORIGEN,
-    pass: process.env.CORREO_PASSWORD
+    user: "gerrero1944@gmail.com",
+    pass: "ijhhbaszbjorqcev"
 
 
   }
@@ -25,10 +25,11 @@ const enviarCorreo = async (correoDestino, asunto, contenido) => {
     subject: asunto,
     text: contenido
   };
-
+console.log('Enviando correo a:', correoDestino);
   try {
     const info = await transporter.sendMail(mailOptions);
     console.log('Correo enviado:', info.response);
+    
   } catch (error) {
     console.error('Error al enviar correo:', error);
   }

@@ -5,7 +5,6 @@ import '../styles/Movement.css';
 import toast, { Toaster } from 'react-hot-toast';
 import { obtenerUsuario } from '../utils/auth';
 import Papa from 'papaparse';
-
 export default function Movement() {
     const [reactivos, setReactivos] = useState<Reagents[]>([]);
     const [busqueda, setBusqueda] = useState('');
@@ -155,6 +154,7 @@ export default function Movement() {
     );
 
     return (
+        <>
         <div className="movement-container">
             <h1 className="title">Gestión de Movimientos de Reactivos</h1>
             <div className='movement-controls'>
@@ -262,5 +262,6 @@ export default function Movement() {
                 </div>
             )}
         </div>
+        </>
     );
 }

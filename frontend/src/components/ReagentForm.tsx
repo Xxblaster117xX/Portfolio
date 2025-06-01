@@ -64,20 +64,12 @@ const ReagentForm: React.FC<Props> = ({ form, setForm, onCreate, loading }) => {
     { label: 'Cantidad', name: 'reagentQuantity', type: 'number' },
     { label: 'Proveedor', name: 'reagentSupplier' },
     { label: 'Tipo', name: 'reagentType' },
-    { label: 'FDS', name: 'reagentFDS' },
+    { label: 'FDS(Ficha de Datos de Seguridad)', name: 'reagentFDS' },
   ];
 
   return (
     <div className="reagent-form-container">
-      {errors.length > 0 && (
-        <div className="form-errors">
-          <ul>
-            {errors.map((err, index) => (
-              <li key={index} style={{ color: 'red' }}>{err}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+      
 
       {fields.map(({ label, name, type = 'text' }) => (
         <div key={name} className="reagent-form-group">
@@ -143,6 +135,15 @@ const ReagentForm: React.FC<Props> = ({ form, setForm, onCreate, loading }) => {
       <button className="reagent-btn-create" onClick={handleSubmit} disabled={loading}>
         Crear
       </button>
+      {errors.length > 0 && (
+        <div className="form-errors">
+          <ul>
+            {errors.map((err, index) => (
+              <li key={index} style={{ color: 'red' }}>{err}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

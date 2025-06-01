@@ -4,7 +4,7 @@
   padding: 2rem;
   box-sizing: border-box;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color:white;
+  background-color:transparent;
   color: #222;
   font-size: 0.875rem;
 }
@@ -19,7 +19,7 @@
 
 /* Contenedor del formulario estructurado en 3 columnas */
 .reagent-form-container {
-  background-color: white;
+  background-color: transparent;
   padding: 2rem;
   border-radius: 12px;
   display: grid;

@@ -4,7 +4,7 @@
 }
 
 .main-contentSidebar {
-  margin-left: 240px; /* Debe coincidir con el ancho del Sidebar */
+  margin-left: 270px; /* Debe coincidir con el ancho del Sidebar */
   padding: 32px;
   flex: 1;
   background-color: #f5f7fa;

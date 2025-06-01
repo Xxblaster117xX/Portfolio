@@ -22,7 +22,7 @@ export default function MainPage() {
         style={{ position: "relative", zIndex: 1 }} // para que esté encima
       >
         <nav className="navbar">
-          <h1>Gestión Almacén</h1>
+          <h1>Quimisan: Gestión de almacén</h1>
           <div className="nav-buttons">
             <button onClick={() => navigate("/LoginForm")}>Iniciar Sesión</button>
             <button onClick={() => navigate("/RegisterForm")}>Registro</button>

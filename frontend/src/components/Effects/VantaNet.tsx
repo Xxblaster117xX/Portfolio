@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import dots from "vanta/dist/vanta.dots.min";
+import Net from "vanta/dist/vanta.net.min";
 
 const VantaBackground: React.FC = () => {
     const vantaRef = useRef<HTMLDivElement>(null);
-    const [vantaEffect, setVantaEffect] = useState<ReturnType<typeof dots> | null>(null);
+    const [vantaEffect, setVantaEffect] = useState<ReturnType<typeof Net> | null>(null);
 
     useEffect(() => {
         if (!vantaEffect && vantaRef.current) {
-            const effect = dots({
+            const effect = Net({
                 el: vantaRef.current,
                 THREE,
                 mouseControls: true,
@@ -17,7 +17,8 @@ const VantaBackground: React.FC = () => {
                 minHeight: 200.00,
                 minWidth: 200.00,
                 scale: 1.00,
-                scaleMobile: 1.00
+                scaleMobile: 1.00,
+                color: 0x3fbdff
             });
 
             setVantaEffect(effect);

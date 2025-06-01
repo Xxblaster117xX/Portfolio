@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { fileURLToPath } from 'url';
 import path from 'path';
-import express from 'express'; 
+import express from 'express';
 import * as MovementService from '../dist/backend/services/movementService.js';
 import * as ReagentService from '../dist/backend/services/reagentService.js';
 import * as HistoricalService from '../dist/backend/services/historicalService.js';
@@ -15,12 +15,13 @@ import {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-let mainWindow;
+var mainWindow;
+var begin = false;
 const verificationCodes = new Map();
 const pendingRegistrations = new Map();
 
 function createMainWindow() {
-  if (mainWindow) {
+  if (begin) {
     mainWindow.focus();
     return;
   }
@@ -34,9 +35,12 @@ function createMainWindow() {
       enableRemoteModule: false,
       nodeIntegration: false,
     },
-  });
+  },
 
-  mainWindow.loadURL('http://localhost:5173');
+  );
+  begin = true,
+
+    mainWindow.loadURL('http://localhost:5173');
   win.webContents.openDevTools();
 
   mainWindow.on('closed', () => {
@@ -44,64 +48,27 @@ function createMainWindow() {
   });
 }
 
-// Servidor Express para API
-function crearServidorAPI() {
-  const expressApp = express();
-  expressApp.use(express.json());
 
-  expressApp.use('/api', forgotPasswordRouter);
-  expressApp.use('/api', resetPasswordRouter);
-
-  expressApp.listen(3001, () => {
-    console.log('Servidor Express escuchando en http://localhost:3001');
-  });
-}
 
 const gotTheLock = app.requestSingleInstanceLock();
 
-if (!gotTheLock) {
-  app.quit();
-} else {
-  app.on('second-instance', () => {
-    if (mainWindow) {
-      if (mainWindow.isMinimized()) mainWindow.restore();
-      mainWindow.focus();
-    }
-  });
 
-  app.whenReady().then(() => {
-    crearServidorAPI(); // <-- Inicia el servidor Express
-    createMainWindow();
-  });
+app.whenReady().then(() => {
+  crearServidorAPI(); // <-- Inicia el servidor Express
+  createMainWindow();
+});
 
-  app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') app.quit();
-  });
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit();
+});
 
-  app.on('activate', () => {
-    if (mainWindow === null) createMainWindow();
-  });
-}
+app.on('activate', () => {
+  if (mainWindow === null) createMainWindow();
+});
 
-
-
-
-// Función para probar el envío de correo al iniciar
-async function pruebaEnvioCorreo() {
-  try {
-    const testEmail = 'acarreterog01@santiagoapostol.net'; 
-    const codigoPrueba = '123456';
-    console.log('Probando envío de correo...');
-    await enviarCodigoVerificacion(testEmail, codigoPrueba);
-    console.log('Correo de prueba enviado correctamente');
-  } catch (error) {
-    console.error('Error enviando correo de prueba:', error);
-  }
-}
 
 // Removed duplicate declaration of gotTheLock and merged logic
 app.whenReady().then(async () => {
- 
   createMainWindow();
 });
 
@@ -170,15 +137,15 @@ ipcMain.handle('iniciar-sesion', async (event, { userGmail, userPassword }) => {
     const esValido = await UserService.verificarContraseña(userGmail, userPassword);
     if (esValido) {
       const usuario = await UserService.obtenerUsuarioPorGmail(userGmail);
-     return {
-  success: true,
-  message: 'Inicio de sesión exitoso.',
-  user: {
-    id: usuario.user_id,
-    nombre: usuario.user_name,
-    correo: usuario.user_gmail,
-    rol: usuario.rol
-  }
+      return {
+        success: true,
+        message: 'Inicio de sesión exitoso.',
+        user: {
+          id: usuario.user_id,
+          nombre: usuario.user_name,
+          correo: usuario.user_gmail,
+          rol: usuario.rol
+        }
       };
     } else {
       return { success: false, message: 'Correo o contraseña incorrectos.' };
@@ -241,7 +208,8 @@ ipcMain.handle('registrar-movimiento', async (event, data) => {
   } catch (error) {
     console.error('Error registrar-movimiento:', error);
     return { success: false, message: error.message };
-  }});
+  }
+});
 ipcMain.handle('obtener-movimientos', async () => {
   try {
     const movimientos = await MovementService.obtenerMovimientos();
@@ -324,7 +292,7 @@ ipcMain.handle('actualizar-reactivo', async (event, data) => {
     await ReagentService.actualizarReactivo(
       data.reagentId, data.reagentCas, data.reagentName, data.reagentQuantity, data.reagentUnit,
       data.reagentAddDate, data.reagentExpirationDate, data.reagentSupplier, data.reagentType, data.reagentFDS,
-      data.reagentState  
+      data.reagentState
     );
     return { success: true };
   } catch (error) {
@@ -346,8 +314,8 @@ ipcMain.handle('eliminar-reactivo', async (event, reagentId) => {
 // HISTORIAL
 ipcMain.handle('registrar-historial', async (event, data) => {
   try {
-    const { historicalUserId,historicalUserName ,action, actionDate, details } = data;
-    await HistoricalService.registrarAccionHistorica(historicalUserId, historicalUserName,action, actionDate, details);
+    const { historicalUserId, historicalUserName, action, actionDate, details } = data;
+    await HistoricalService.registrarAccionHistorica(historicalUserId, historicalUserName, action, actionDate, details);
     return { success: true };
   } catch (error) {
     console.error('Error registrar-historial:', error);

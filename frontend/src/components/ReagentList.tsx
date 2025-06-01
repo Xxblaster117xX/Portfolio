@@ -5,7 +5,6 @@ import '../styles/SearchReagent.css'
 
 
 
-
 export type ReagentState = 'disponible' | 'escogido';
 interface Props {
     reagents: Reagents[];
@@ -158,7 +157,17 @@ const ReagentList: React.FC<Props> = ({
         onEdit(updated);
         setEditingReagent(null);
     };
-    
+
+    const fieldTranslations: Record<string, string> = {
+        reagentCas: 'Número CAS',
+        reagentName: 'Nombre',
+        reagentUnit: 'Unidad de medida',
+        reagentSupplier: 'Proveedor',
+        reagentType: 'Tipo de reactivo',
+        reagentFDS: 'FDS (Ficha de Seguridad)',
+    };
+
+
     return (
         <>
             <h1 className='title'>Gestión de reactivos</h1>
@@ -171,40 +180,39 @@ const ReagentList: React.FC<Props> = ({
                     className="reagent-input"
                 />
 
-                <div className="reagent-checkbox-container">
-                    <div className="reagent-filter-checkboxes">
-                        {filterFields.map((field) => (
-                            <label key={field} className="checkbox-label">
-                                <input
-                                    type="checkbox"
-                                    checked={selectedFields.includes(field)}
-                                    onChange={() => toggleFilterField(field)}
-                                />
-                                {field.replace('reagent', '')}
-                            </label>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="reagent-date-filters">
-                    <div className="date-filter">
-                        <label>Ingreso desde:</label>
-                        <input type="date" value={addDateFrom} onChange={e => setAddDateFrom(e.target.value)} />
-                    </div>
-                    <div className="date-filter">
-                        <label>Ingreso hasta:</label>
-                        <input type="date" value={addDateTo} onChange={e => setAddDateTo(e.target.value)} />
-                    </div>
-                    <div className="date-filter">
-                        <label>Expira desde:</label>
-                        <input type="date" value={expDateFrom} onChange={e => setExpDateFrom(e.target.value)} />
-                    </div>
-                    <div className="date-filter">
-                        <label>Expira hasta:</label>
-                        <input type="date" value={expDateTo} onChange={e => setExpDateTo(e.target.value)} />
-                    </div>
+                <div className="reagent-filter-fields">
+                    {filterFields.map((field) => (
+                        <label key={field} className="filter-checkbox">
+                            <input
+                                type="checkbox"
+                                checked={selectedFields.includes(field)}
+                                onChange={() => toggleFilterField(field)}
+                            />
+                            {fieldTranslations[field] || field}
+                        </label>
+                    ))}
                 </div>
             </div>
+
+            <div className="reagent-date-section">
+                <div className="date-filter">
+                    <label>Ingreso desde:</label>
+                    <input type="date" value={addDateFrom} onChange={e => setAddDateFrom(e.target.value)} />
+                </div>
+                <div className="date-filter">
+                    <label>Ingreso hasta:</label>
+                    <input type="date" value={addDateTo} onChange={e => setAddDateTo(e.target.value)} />
+                </div>
+                <div className="date-filter">
+                    <label>Expira desde:</label>
+                    <input type="date" value={expDateFrom} onChange={e => setExpDateFrom(e.target.value)} />
+                </div>
+                <div className="date-filter">
+                    <label>Expira hasta:</label>
+                    <input type="date" value={expDateTo} onChange={e => setExpDateTo(e.target.value)} />
+                </div>
+            </div>
+
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem', marginRight: '1rem' }}>
                 <button
@@ -237,7 +245,15 @@ const ReagentList: React.FC<Props> = ({
                                 <td>{formatDate(r.reagentExpirationDate)}</td>
                                 <td>{r.reagentSupplier}</td>
                                 <td>{r.reagentType}</td>
-                                <td>{r.reagentFDS}</td>
+                                <td>
+                                    {r.reagentFDS ? (
+                                        <a href={r.reagentFDS} target="_blank" rel="noopener noreferrer">
+                                            Ver FDS
+                                        </a>
+                                    ) : (
+                                        '—'
+                                    )}
+                                </td>
 
                                 <td>
                                     <button

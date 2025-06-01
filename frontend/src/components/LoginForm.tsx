@@ -4,6 +4,7 @@ import '../styles/LoginForm.css';
 import VantaBackground from "../components/Effects/VantaGlobe";
 import { rol } from '../enum/RolEnum'; 
 
+
 export default function LoginForm() {
   const [userGmail, setUserGmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
@@ -119,6 +120,9 @@ export default function LoginForm() {
           </button>
         </form>
       </div>
+      
     </>
+                
+
   );
 }

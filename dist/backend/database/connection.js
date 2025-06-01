@@ -105,23 +105,13 @@ async function crearTablas() {
 }
 
 // Crear la ventana principal
-function createWindow() {
-    const win = new BrowserWindow({
-        width: 1000,
-        height: 700,
-        webPreferences: {
-            preload: path.join(__dirname, 'preload.js'),
-            contextIsolation: true,
-        },
-    });
-    win.loadURL('http://localhost:5173');
-}
+
 
 app.whenReady().then(async () => {
     try {
         await openDb(); // Abre la base de datos (ahora es async)
         await crearTablas(); // Crea las tablas
-        createWindow(); // Inicia la ventana
+         
 
         // Manejo de la solicitud para obtener productos
         ipcMain.handle('get-productos', async () => {
@@ -156,10 +146,6 @@ app.on('window-all-closed', async () => {
     if (process.platform !== 'darwin') app.quit();
 });
 
-// Reabrir ventana si no hay ventanas abiertas (en macOS)
-app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
-});
 
 // Exporta la instancia de la base de datos para que otros archivos puedan usarla
 export { db };
