@@ -13,7 +13,7 @@ type Usuario = {
 export default function Sidebar() {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const navigate = useNavigate();
-  const location = useLocation(); // <-- Aquí
+  const location = useLocation(); 
 
   useEffect(() => {
     const user = obtenerUsuario();

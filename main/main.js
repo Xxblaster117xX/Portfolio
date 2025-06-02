@@ -344,6 +344,15 @@ ipcMain.handle('obtener-usuarios', async () => {
   }
 });
 
+ipcMain.handle('obtener-usuarios-excepto-admin', async () => {
+  try {
+    const usuarios = await UserService.ObtenerUsuariosExceptoAdmin();
+    return { success: true, data: usuarios };
+  } catch (error) {
+    console.error('Error obtener-usuarios:', error);
+    return { success: false, message: error.message };
+  }
+});
 ipcMain.handle('eliminar-usuario', async (event, userId) => {
   try {
     await UserService.eliminarUsuario(userId);

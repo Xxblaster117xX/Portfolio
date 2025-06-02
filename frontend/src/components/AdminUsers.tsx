@@ -28,7 +28,7 @@ const AdminUsers: React.FC = () => {
     const [busqueda, setBusqueda] = useState<string>('');
 
     const cargarUsuarios = async () => {
-        if (!window.electron || !window.electron.obtenerUsuarios) {
+        if (!window.electron || !window.electron.ObtenerUsuariosExceptoAdmin) {
             setError('Funcionalidad no disponible.');
             setCargando(false);
             return;
@@ -36,7 +36,7 @@ const AdminUsers: React.FC = () => {
 
         try {
             setCargando(true);
-            const res = (await window.electron.obtenerUsuarios()) as ObtenerUsuariosResponse;
+            const res = (await window.electron.ObtenerUsuariosExceptoAdmin()) as ObtenerUsuariosResponse;
 
             if (res.success && Array.isArray(res.data)) {
                 setUsuarios(res.data);

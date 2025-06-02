@@ -106,8 +106,6 @@ const Historical: React.FC = () => {
       <table className="historial-table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>ID Usuario</th>
             <th>Nombre Usuario</th>
             <th>Acción</th>
             <th>Fecha</th>
@@ -117,8 +115,6 @@ const Historical: React.FC = () => {
         <tbody>
           {filteredHistorial.map((item) => (
             <tr key={item.HistoricalId}>
-              <td>{item.HistoricalId}</td>
-              <td>{item.HistoricalUserId}</td>
               <td>{item.historicalUsername}</td>
               <td>{item.Action}</td>
               <td>{item.ActionDate.toLocaleString()}</td>

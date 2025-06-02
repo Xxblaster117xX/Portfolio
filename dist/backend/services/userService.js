@@ -70,6 +70,16 @@ class UserService {
     }
   }
 
+  static async ObtenerUsuariosExceptoAdmin(){
+    try{
+      return await db.all('SELECT * FROM users WHERE user_id != 1');
+    }catch(error)
+    {
+      console.error('Error al obtener usuarios excepto admin:', error);
+      throw error;
+    }
+  }
+
   static async obtenerUsuarioPorGmail(userGmail) {
     try {
       return await db.get(`SELECT * FROM users WHERE user_gmail = ?`, [userGmail]);

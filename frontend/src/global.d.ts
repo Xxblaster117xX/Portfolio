@@ -8,6 +8,7 @@ declare global {
 //Usuario
 
       obtenerUsuarios(): Promise<{ success: boolean; data: Usuario[]; message?: string }>;
+       ObtenerUsuariosExceptoAdmin(): Promise<{ success: boolean; data: Usuario[]; message?: string }>;
 verificarCorreoExiste: (userGmail: string) => Promise<{ exists: boolean }>;
       actualizarContrasena: (userGmail: number, nuevaContraseña: string) => Promise<{ success: boolean; message: string }>;
 

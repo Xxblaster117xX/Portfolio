@@ -59,6 +59,6 @@ contextBridge.exposeInMainWorld('electron', {
   eliminarUsuario: (userId) => ipcRenderer.invoke('eliminar-usuario', userId),
   verificarCorreoExiste: (correo) => ipcRenderer.invoke('verificarCorreoExiste', correo),
   actualizarContrasena: (userGmail, nuevaContraseña) =>ipcRenderer.invoke('actualizar-contrasena', { userGmail, nuevaContraseña }),
-
+  ObtenerUsuariosExceptoAdmin: () => ipcRenderer.invoke('obtener-usuarios-excepto-admin'),
 
 });
