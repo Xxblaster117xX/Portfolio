@@ -1,10 +1,19 @@
+import { Return } from 'three/tsl';
 import { db } from '../database/connection.js';
 
 // Validación de formato de fecha (YYYY-MM-DD)
 const esFechaValida = (fecha) => /^\d{4}-\d{2}-\d{2}$/.test(fecha);
 
 // Validación de valores numéricos no negativos
-const esNumeroValido = (numero) => !isNaN(numero) && numero >= 0;
+const esNumeroValido = (numero) => {
+  if (typeof numero === 'string') {
+    numero = numero.replace(',', '.');
+  }
+  const n = parseFloat(numero);
+  return !isNaN(n) && n >= 0;
+};
+
+
 
 // Validación de texto no vacío y tipo string
 const esTextoValido = (texto) => {
@@ -38,7 +47,9 @@ export const insertarReactivo = async (
 ) => {
   if (!esTextoValido(reagentCas)) throw new Error('El CAS del reactivo no puede estar vacío.');
   if (!esTextoValido(reagentName)) throw new Error('El nombre del reactivo no puede estar vacío.');
-  if (!esNumeroValido(reagentQuantity)) throw new Error('La cantidad debe ser un número válido y no negativo.');
+ if (typeof reagentQuantity === 'string') {
+  reagentQuantity = parseFloat(reagentQuantity.replace(',', '.'));
+}
   if (!esTextoValido(reagentUnit)) throw new Error('La unidad del reactivo no puede estar vacío');
   if (!esFechaValida(reagentAddDate)) throw new Error('La fecha de adición debe tener el formato YYYY-MM-DD.');
   if (!esFechaValida(reagentExpirationDate)) throw new Error('La fecha de expiración debe tener el formato YYYY-MM-DD.');
@@ -86,7 +97,9 @@ export const actualizarReactivo = async (
 
   if (!esTextoValido(reagentCas)) throw new Error('El CAS del reactivo no puede estar vacío.');
   if (!esTextoValido(reagentName)) throw new Error('El nombre del reactivo no puede estar vacío.');
-  if (!esNumeroValido(reagentQuantity)) throw new Error('La cantidad debe ser un número válido y no negativo.');
+  if (typeof reagentQuantity === 'string') {
+  reagentQuantity = parseFloat(reagentQuantity.replace(',', '.'));
+}
   if (!esTextoValido(reagentUnit)) throw new Error('La unidad del reactivo no puede estar vacío.');
   if (!esFechaValida(reagentAddDate)) throw new Error('La fecha de adición debe tener el formato YYYY-MM-DD.');
   if (!esFechaValida(reagentExpirationDate)) throw new Error('La fecha de expiración debe tener el formato YYYY-MM-DD.');
@@ -116,7 +129,7 @@ export const eliminarReactivo = async (reagentId) => {
   console.log(`Reactivo eliminado: ID ${reagentId}`);
 };
 
-// Obtener reactivos por nombre (búsqueda con LIKE)
+// Obtener reactivos por nombre
 export const obtenerReactivosPorNombre = async (nombre) => {
   const resultados = await db.all(`SELECT * FROM reagents WHERE reagent_name LIKE ?`, [`%${nombre}%`]);
   return resultados.map(mapReagentToCamelCase);
@@ -145,7 +158,7 @@ export const marcarReactivoComoEscogido = async (reagentId) => {
   console.log(`Reactivo ID ${reagentId} marcado como escogido.`);
 };
 
-// Introducir cantidad gastada y actualizar cantidad total y estado
+
 // Introducir cantidad gastada y actualizar cantidad total y estado
 export const introducirReactivo = async (reagentId, cantidadGastada, userId) => {
   console.log('introducirReactivo called with:', { reagentId, cantidadGastada, userId });
@@ -165,7 +178,7 @@ export const introducirReactivo = async (reagentId, cantidadGastada, userId) => 
     throw new Error('Cantidad gastada mayor que la cantidad disponible');
   }
 
-  // 👇 CAMBIO CLAVE: poner 'disponible' si todavía queda cantidad, 'agotado' si llega a 0
+  //  CAMBIO CLAVE: poner 'disponible' si todavía queda cantidad, 'agotado' si llega a 0
   const nuevoEstado = nuevaCantidad === 0 ? 'agotado' : 'disponible';
 
   await db.run(

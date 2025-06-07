@@ -9,6 +9,8 @@ import '../styles/Reagent.css';
 export type ReagentState = 'disponible' | 'escogido';
 import { obtenerUsuario } from '../utils/auth'; 
 
+
+// Componente principal para gestionar reactivos
 export default function ReagentManager() {
   const [reagents, setReagents] = useState<Reagents[]>([]);
   const [form, setForm] = useState<Omit<Reagents, 'reagentId'>>({
@@ -23,6 +25,8 @@ export default function ReagentManager() {
     reagentFDS: '',
     reagentState: 'disponible',
   });
+
+  // Estados para manejar la búsqueda, carga, errores y visibilidad del formulario
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +37,7 @@ export default function ReagentManager() {
 const [usuarioId, setUsuarioId] = useState<number>(0);
 const [usuarioNombre, setUsuarioNombre] = useState<string>('');
   
-
+// Obtener el usuario actual al cargar el componente con localStorage
 useEffect(() => {
     const usuario = obtenerUsuario();
     if (usuario) { 
@@ -42,12 +46,14 @@ useEffect(() => {
     }
   }, []);
 
+  // Formatea las fechas a 'YYYY-MM-DD' para el backend
   const formatDate = (date: Date | string) => {
     const d = new Date(date);
     if (isNaN(d.getTime())) return '';
     return d.toISOString().slice(0, 10);
   };
 
+  // Carga los reactivos desde el backend
   const loadReagents = async () => {
     setLoading(true);
     setError(null);
@@ -58,7 +64,7 @@ useEffect(() => {
           reagentId: Number(r.reagentId) || 0,
           reagentCas: r.reagentCas || '',
           reagentName: r.reagentName || '',
-          reagentQuantity: Number(r.reagentQuantity) || 0,
+          reagentQuantity: Number(r.reagentQuantity),
           reagentUnit: r.reagentUnit || '',
           reagentAddDate: new Date(r.reagentAddDate || new Date()),
           reagentExpirationDate: new Date(r.reagentExpirationDate || new Date()),
@@ -78,6 +84,7 @@ useEffect(() => {
     setLoading(false);
   };
 
+  // Resetea el formulario a sus valores iniciales
   const resetForm = () => {
     setForm({
       reagentCas: '',
@@ -94,6 +101,7 @@ useEffect(() => {
     setError(null);
   };
 
+  // Maneja la creación de un nuevo reactivo
   const handleCreate = async () => {
     setLoading(true);
     setError(null);
@@ -131,6 +139,7 @@ useEffect(() => {
     setLoading(false);
   };
 
+  // Maneja la eliminación de un reactivo
   const handleDelete = async (id: number) => {
     setLoading(true);
     try {
@@ -157,6 +166,7 @@ useEffect(() => {
     setLoading(false);
   };
 
+  // Maneja la edición de un reactivo
   const handleEdit = async (updatedReagent: Reagents) => {
     setLoading(true);
     setError(null);
@@ -190,6 +200,7 @@ useEffect(() => {
     setEditingReagent(null);
   };
 
+  // Maneja la confirmación del popup después de crear un reactivo
   const onPopupConfirm = () => {
     setShowPopup(false);
     setShowForm(false);
@@ -197,6 +208,8 @@ useEffect(() => {
     Toaster();
   };
 
+
+  // Maneja la cancelación del popup
   const onPopupCancel = () => {
     setShowPopup(false);
     toast.success('Reactivo creado con éxito');

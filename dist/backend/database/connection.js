@@ -25,12 +25,7 @@ async function openDb() {
 
 async function crearTablas() {
     // Creamos las tablas solo si no existen
-    await db.exec(`
-        CREATE TABLE IF NOT EXISTS materials (
-            material_id INTEGER PRIMARY KEY,
-            material_name TEXT NOT NULL
-        );
-    `);
+
     await db.exec(`
         CREATE TABLE IF NOT EXISTS reagents (
             reagent_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -54,14 +49,6 @@ async function crearTablas() {
             user_password TEXT NOT NULL,
             rol TEXT NOT NULL,
             isVerified BOOLEAN DEFAULT FALSE
-        );
-    `);
-    await db.exec(`
-        CREATE TABLE IF NOT EXISTS productos (
-            id INTEGER PRIMARY KEY,
-            nombre TEXT NOT NULL,
-            cantidad REAL NOT NULL,
-            precio REAL NOT NULL
         );
     `);
     await db.exec(`
@@ -92,15 +79,6 @@ async function crearTablas() {
             FOREIGN KEY (historical_user_id) REFERENCES users(user_id)
         );
     `);
-    await db.exec(`
-        CREATE TABLE IF NOT EXISTS password_reset_tokens (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_email TEXT NOT NULL,
-    token TEXT NOT NULL,
-    expires_at TEXT NOT NULL
-  )
-    `);
-
 
 }
 

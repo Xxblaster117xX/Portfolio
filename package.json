@@ -1,6 +1,8 @@
 {
   "name": "proyecto-final",
   "version": "1.0.0",
+  "description": "Aplicación de escritorio desarrollada con Electron y React.",
+  "author": "Tu Nombre",
   "private": true,
   "main": "main/main.js",
   "type": "module",
@@ -10,7 +12,8 @@
     "electron:dev": "concurrently \"npm run start-frontend\" ",
     "start-frontend": "cd frontend && npm run dev",
     "start-electron": "wait-on http://localhost:5173 && electron .",
-    "icon": "builder.icon"
+    "icon": "builder.icon",
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
     "3dmol": "^2.4.2",
@@ -38,5 +41,21 @@
     "electron-builder": "^24.6.0",
     "electron-rebuild": "^3.2.9",
     "wait-on": "^7.2.0"
+  },
+  "build": {
+    "appId": "com.tuempresa.proyectofinal",
+    "productName": "ProyectoFinal",
+    "files": [
+      "build/**/*",
+      "main/**/*",
+      "preload.js",
+      "package.json"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis"
+    }
   }
 }

@@ -5,6 +5,10 @@ import '../styles/Movement.css';
 import toast, { Toaster } from 'react-hot-toast';
 import { obtenerUsuario } from '../utils/auth';
 import Papa from 'papaparse';
+
+
+
+//Método para establecer el tipo de datos de los reactivos
 export default function Movement() {
     const [reactivos, setReactivos] = useState<Reagents[]>([]);
     const [busqueda, setBusqueda] = useState('');
@@ -14,6 +18,7 @@ export default function Movement() {
     const [usuarioId, setUsuarioId] = useState<number | null>(null);
     const [usuarioNombre, setUsuarioNombre] = useState<string>('');
 
+    //Cargar el usuario desde local storage
     useEffect(() => {
         const usuario = obtenerUsuario();
         if (usuario) {
@@ -22,6 +27,7 @@ export default function Movement() {
         }
     }, []);
 
+// Método para cargar los reactivos disponibles y escogidos
     const cargarReactivos = useCallback(async () => {
         if (!window.electron) return;
         try {
@@ -37,6 +43,8 @@ export default function Movement() {
         cargarReactivos();
     }, [cargarReactivos]);
 
+
+    // Método para marcar un reactivo como escogido
     const manejarEscoger = useCallback(async (productId: number) => {
         if (!window.electron) return;
         if (!usuarioId) {
@@ -62,12 +70,17 @@ export default function Movement() {
         }
     }, [cargarReactivos, usuarioId, usuarioNombre]);
 
+
+    // Método para abrir el modal de introducción de reactivo
     const manejarAbrirModal = useCallback((reactivo: Reagents) => {
         setReactivoSeleccionado(reactivo);
         setCantidadGastada('');
         setModalAbierto(true);
     }, []);
 
+
+
+    // Método para parsear la cantidad introducida
     const parseCantidad = (valor: string | number): number => {
         if (typeof valor === 'number') return valor;
         if (typeof valor === 'string') {
@@ -77,6 +90,8 @@ export default function Movement() {
         }
         return NaN;
     };
+
+    // Método para exportar los reactivos a CSV
     const exportarCSV = () => {
         const data = reactivosFiltrados.map(r => ({
             Nombre: r.reagentName,
@@ -97,6 +112,9 @@ export default function Movement() {
         document.body.removeChild(link);
     };
 
+
+
+    // Método para manejar la introducción de un reactivo
     const manejarIntroducir = useCallback(async () => {
         if (!reactivoSeleccionado) return;
         if (!usuarioId) {

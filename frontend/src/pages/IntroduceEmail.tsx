@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/IntroduceEmail.css'; 
 import VantaBackground from './Effects/VantaBackground';
+// Importa el componente VantaBackground
 export function VerificarCorreo() {
   const [correo, setCorreo] = useState('');
   const [error, setError] = useState('');
   const [cargando, setCargando] = useState(false);
   const navigate = useNavigate();
-
+// Importa useNavigate desde react-router-dom
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');

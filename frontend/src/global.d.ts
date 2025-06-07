@@ -1,6 +1,7 @@
 import { Reagents } from '../interface/IReagents';
 import { Movimiento } from '../interface/IMovimiento';
 import { Historial } from '../interface/IHistorial';
+import{rol} from '../enum/RolEnum';
 
 declare global {
   interface Window {
@@ -8,8 +9,8 @@ declare global {
 //Usuario
 
       obtenerUsuarios(): Promise<{ success: boolean; data: Usuario[]; message?: string }>;
-       ObtenerUsuariosExceptoAdmin(): Promise<{ success: boolean; data: Usuario[]; message?: string }>;
-verificarCorreoExiste: (userGmail: string) => Promise<{ exists: boolean }>;
+      ObtenerUsuariosExceptoAdmin(): Promise<{ success: boolean; data: Usuario[]; message?: string }>;
+      verificarCorreoExiste: (userGmail: string) => Promise<{ exists: boolean }>;
       actualizarContrasena: (userGmail: number, nuevaContraseña: string) => Promise<{ success: boolean; message: string }>;
 
       eliminarUsuario(userId: number): Promise<{ success: boolean; message?: string }>;
@@ -17,7 +18,7 @@ verificarCorreoExiste: (userGmail: string) => Promise<{ exists: boolean }>;
         userName: string; 
         userGmail: string; 
         userPassword: string; 
-        rol: string; 
+        rol: rol; 
       }) => Promise<{ success: boolean; message: string }>;
 
       verificarCodigo: (data: { 

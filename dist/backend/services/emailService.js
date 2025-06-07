@@ -18,6 +18,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+// Transportador de correo configurado para Gmail
 const enviarCorreo = async (correoDestino, asunto, contenido) => {
   const mailOptions = {
     from: process.env.CORREO_ORIGEN,

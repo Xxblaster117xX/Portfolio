@@ -27,8 +27,8 @@ function createMainWindow() {
   }
 
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 2000,
+    height: 2000,
     webPreferences: {
       preload: path.join(__dirname, '/preload.js'),
       contextIsolation: true,
@@ -347,6 +347,7 @@ ipcMain.handle('obtener-usuarios', async () => {
 ipcMain.handle('obtener-usuarios-excepto-admin', async () => {
   try {
     const usuarios = await UserService.ObtenerUsuariosExceptoAdmin();
+    console.log('Usuarios obtenidos excepto admin:', usuarios);
     return { success: true, data: usuarios };
   } catch (error) {
     console.error('Error obtener-usuarios:', error);

@@ -26,6 +26,8 @@ export default function Sidebar() {
     navigate(path);
   };
 
+  // Renderiza el menú de navegación basado en el rol del usuario
+
   const renderMenu = () => {
     if (!usuario) return null;
 
@@ -40,8 +42,10 @@ export default function Sidebar() {
       </li>
     );
 
+    //Renderiza el menú basado en el rol del usuario
     switch (usuario.rol) {
       case rol.ADMINISTRADOR:
+        case rol.PROFESOR:
         return (
           <nav className="sidebar-nav">
             <ul>
@@ -53,7 +57,7 @@ export default function Sidebar() {
           </nav>
         );
 
-      case rol.PROFESOR:
+      
       case rol.ALUMNO:
         return (
           <nav className="sidebar-nav">

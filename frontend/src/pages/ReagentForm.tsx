@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Reagents } from '../interface/IReagents';
 
+
+
+// Interfaz para cargar  las propiedades del formulario de reactivos desde electron
 interface Props {
   form: Omit<Reagents, 'reagentId'>;
   setForm: React.Dispatch<React.SetStateAction<Omit<Reagents, 'reagentId'>>>;
@@ -8,9 +11,13 @@ interface Props {
   loading: boolean;
 }
 
+
 const ReagentForm: React.FC<Props> = ({ form, setForm, onCreate, loading }) => {
   const [errors, setErrors] = useState<string[]>([]);
 
+
+
+  // Maneja los cambios en los campos del formulario
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     setForm((prev) => ({
@@ -18,11 +25,13 @@ const ReagentForm: React.FC<Props> = ({ form, setForm, onCreate, loading }) => {
       [name]: type === 'date'
         ? new Date(value)
         : name === 'reagentQuantity'
-          ? Number(value)
+          ? value === '' ? '' : Number(value)
           : value,
     }));
   };
 
+
+  // Valida el formulario antes de enviarlo
   const validateForm = (): boolean => {
     const newErrors: string[] = [];
 
@@ -45,12 +54,15 @@ const ReagentForm: React.FC<Props> = ({ form, setForm, onCreate, loading }) => {
     return newErrors.length === 0;
   };
 
+  // Maneja el envío del formulario
   const handleSubmit = () => {
     if (validateForm()) {
       onCreate();
     }
   };
 
+
+  // Formatea la fecha para el input de tipo date
   const formatDate = (date: Date | string) => {
     const d = new Date(date);
     return d.toISOString().slice(0, 10);

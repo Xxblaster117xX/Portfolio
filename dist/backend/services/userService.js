@@ -8,16 +8,17 @@ class UserService {
     return regex.test(password);
   }
 
+  // Método para encriptar la contraseña del usuario
   static async encriptarContraseña(password) {
     const salt = await bcryptjs.genSalt(10);
     return bcryptjs.hash(password, salt);
   }
-
+// Método para verificar si el correo electrónico tiene un formato válido
   static verificarCorreoValido(email) {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return regex.test(email);
   }
-
+// Método para verificar si el usuario ya está verificado
   static async verificarUsuario(userGmail) {
     try {
       const result = await db.run(
@@ -33,6 +34,7 @@ class UserService {
     }
   }
 
+  // Método para insertar un nuevo usuario en la base de datos
   static async insertarUsuario(userName, userGmail, userPassword, rol) {
     try {
       if (!this.verificarCorreoValido(userGmail)) {
@@ -61,6 +63,7 @@ class UserService {
     }
   }
 
+  // Método para iniciar sesión y obtener el usuario por correo electrónico
    static async obtenerUsuarios() {
     try {
       return await db.all(`SELECT * FROM users`);
@@ -70,6 +73,7 @@ class UserService {
     }
   }
 
+  // Método para obtener un usuario por su ID
   static async ObtenerUsuariosExceptoAdmin(){
     try{
       return await db.all('SELECT * FROM users WHERE user_id != 1');
@@ -80,6 +84,7 @@ class UserService {
     }
   }
 
+  // Método para obtener un usuario por su correo electrónico
   static async obtenerUsuarioPorGmail(userGmail) {
     try {
       return await db.get(`SELECT * FROM users WHERE user_gmail = ?`, [userGmail]);
@@ -89,6 +94,7 @@ class UserService {
     }
   }
 
+  // Método para obtener un usuario por su ID
   static async actualizarContrasena(userGmail, nuevaContraseña) {
     try {
       if (!this.verificarContraseñaFuerte(nuevaContraseña)) {
@@ -110,6 +116,7 @@ class UserService {
     }
   }
 
+  // Método para obtener un usuario por su ID
   static async eliminarUsuario(userId) {
     try {
       const result = await db.run(`DELETE FROM users WHERE user_id = ?`, [userId]);
@@ -123,6 +130,7 @@ class UserService {
     }
   }
 
+  // Método para verificar la contraseña del usuario al iniciar sesión
   static async verificarContraseña(userGmail, password) {
     try {
       const usuario = await this.obtenerUsuarioPorGmail(userGmail);
@@ -144,13 +152,13 @@ class UserService {
     }
   }
 
-  
+// Método para verificar si un usuario está verificado  
   static async existeUsuarioVerificado(userGmail) {
     const usuario = await this.obtenerUsuarioPorGmail(userGmail);
     return !!usuario && usuario.isVerified;
   }
 
-  
+  // Método para verificar si un usuario ya está registrado
   static async usuarioYaRegistrado(userGmail) {
     const usuario = await this.obtenerUsuarioPorGmail(userGmail);
     return !!usuario;

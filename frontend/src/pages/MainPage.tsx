@@ -5,6 +5,7 @@ import "../styles/App.css";
 
 import VantaGlobe from "./Effects/VantaRings";
 
+//Importa la navegación 
 export default function MainPage() {
   const navigate = useNavigate();
 

@@ -4,8 +4,11 @@ import '../styles/SearchReagent.css'
 
 
 
-
+// Definición del tipo de estado del reactivo
 export type ReagentState = 'disponible' | 'escogido';
+
+
+// Definición de las propiedades del componente
 interface Props {
     reagents: Reagents[];
     searchTerm: string;
@@ -16,6 +19,9 @@ interface Props {
     setEditingReagent: (reagent: Reagents | null) => void;
     onEdit: (updatedReagent: Reagents) => void;
 }
+
+
+// Componente principal para la lista de reactivos
 
 const ReagentList: React.FC<Props> = ({
     reagents,
@@ -31,11 +37,21 @@ const ReagentList: React.FC<Props> = ({
         'reagentCas', 'reagentName', 'reagentUnit', 'reagentSupplier', 'reagentType', 'reagentFDS'
     ];
 
+
+    // Estado para los campos de filtro seleccionados
     const [selectedFields, setSelectedFields] = useState<typeof filterFields>(filterFields);
 
+
+    // Estado para el popup de eliminación
     const [showDeletePopup, setShowDeletePopup] = useState(false);
+
+
+    // Estado para el ID del reactivo a eliminar
     const [idToDelete, setIdToDelete] = useState<number | null>(null);
 
+
+
+    // Estado para el formulario de edición
     const [editForm, setEditForm] = useState<Omit<Reagents, 'reagentId'>>({
         reagentCas: '',
         reagentName: '',
@@ -72,17 +88,21 @@ const ReagentList: React.FC<Props> = ({
         }
     }, [editingReagent]);
 
+    // Maneja los cambios en el formulario de edición
     const toggleFilterField = (field: typeof filterFields[number]) => {
         setSelectedFields(prev =>
             prev.includes(field) ? prev.filter(f => f !== field) : [...prev, field]
         );
     };
 
+
+    // Formatea la fecha para el input de tipo date
     const formatDate = (date: Date | string) => {
         const d = new Date(date);
         return isNaN(d.getTime()) ? '' : d.toISOString().slice(0, 10);
     };
 
+    // Verifica si una fecha está dentro del rango
     const isWithinDateRange = (value: string | Date, from: string, to: string) => {
         const date = new Date(value).getTime();
         const fromTime = from ? new Date(from).getTime() : null;
@@ -102,6 +122,8 @@ const ReagentList: React.FC<Props> = ({
         return matchesText && matchesAddDate && matchesExpDate;
     });
 
+
+    // Maneja la exportación a CSV
     const handleExportCSV = (data: Reagents[]) => {
         const csvHeaders = [
             'ID', 'CAS', 'Nombre', 'Cantidad', 'Unidad',
@@ -139,7 +161,7 @@ const ReagentList: React.FC<Props> = ({
         document.body.removeChild(link);
     };
 
-
+// Maneja la confirmación de eliminación
     const handleConfirmDelete = () => {
         if (idToDelete !== null) {
             onDelete(idToDelete);
@@ -147,6 +169,8 @@ const ReagentList: React.FC<Props> = ({
             setShowDeletePopup(false);
         }
     };
+
+    // Maneja la confirmación de edición
     const handleEditConfirm = () => {
         if (!editingReagent) return;
         const updated: Reagents = {
@@ -158,6 +182,8 @@ const ReagentList: React.FC<Props> = ({
         setEditingReagent(null);
     };
 
+
+    // Traducciones de los campos para los filtros
     const fieldTranslations: Record<string, string> = {
         reagentCas: 'Número CAS',
         reagentName: 'Nombre',
@@ -325,10 +351,12 @@ const ReagentList: React.FC<Props> = ({
                                 <label>
                                     Cantidad Disponible:
                                     <input
-                                        type="number"
+                                        type="number" 
+                                       
                                         value={editForm.reagentQuantity}
                                         onChange={e => setEditForm(prev => ({ ...prev, reagentQuantity: Number(e.target.value) }))}
                                         min={0}
+                                        step="any"
                                         required
                                     />
                                 </label>

@@ -7,9 +7,10 @@ const NewPassword: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Mirar por que no funciona el useLocation
+ 
   const correo = location.state?.correo || '';
 
+  // Obtener el correo del estado de la ubicación, si no existe redirigir a IntroduceEmail
   const [nuevaContrasena, setNuevaContrasena] = useState('');
   const [confirmarContrasena, setConfirmarContrasena] = useState('');
   const [loading, setLoading] = useState(false);

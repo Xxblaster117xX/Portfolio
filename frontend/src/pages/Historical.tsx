@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { IHistorical } from '../interface/IHistorical';
 import '../styles/historical.css';
 import Papa from 'papaparse';
-
+// Definición de tipos para la respuesta del historial
 type HistoricalRaw = {
   historical_id: number;
   historical_user_id: number;
@@ -12,6 +12,7 @@ type HistoricalRaw = {
   details: string;
 };
 
+// Definición de la respuesta esperada al obtener el historial
 const mapHistoricalToPascalCase = (h: HistoricalRaw): IHistorical => ({
   HistoricalId: h.historical_id,
   historicalUsername: h.historical_user_name,
@@ -20,7 +21,7 @@ const mapHistoricalToPascalCase = (h: HistoricalRaw): IHistorical => ({
   ActionDate: new Date(h.action_date),
   Details: h.details,
 });
-
+// Componente principal para el historial de acciones
 const Historical: React.FC = () => {
   const [historial, setHistorial] = useState<IHistorical[]>([]);
   const [loading, setLoading] = useState(true);
@@ -48,6 +49,7 @@ const Historical: React.FC = () => {
     fetchHistorial();
   }, []);
 
+  // Filtrar el historial según el término de búsqueda
   const filteredHistorial = historial.filter((item) => {
     const search = searchTerm.toLowerCase();
     return (
@@ -60,6 +62,7 @@ const Historical: React.FC = () => {
     );
   });
 
+  // Función para exportar el historial a CSV
   const exportToCSV = () => {
     const csvData = filteredHistorial.map(item => ({
       ID: item.HistoricalId,

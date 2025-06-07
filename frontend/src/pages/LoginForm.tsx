@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/LoginForm.css';
-import VantaBackground from "../components/Effects/VantaGlobe";
+import VantaBackground from "./Effects/VantaGlobe";
 import { rol } from '../enum/RolEnum'; 
 
-
+//Ganchos para el manejo de estado y navegación
 export default function LoginForm() {
   const [userGmail, setUserGmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
+  
+  // Definición de tipos para la respuesta de los usuarios 
   type Usuario = {
     id: number;
     nombre: string;
@@ -29,6 +31,7 @@ export default function LoginForm() {
     };
   };
 
+  // Función para manejar el inicio de sesión
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -72,6 +75,7 @@ export default function LoginForm() {
     }
   };
 
+  // Función para manejar la recuperación de contraseña
   const handleRecoverPassword = () => {
     navigate('/IntroduceEmail');
   };

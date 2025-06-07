@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Papa from 'papaparse';
 import '../styles/AdminUsers.css';
-
+import toast, { Toaster} from 'react-hot-toast';
+// Definición de tipos para las respuestas de las funciones de Electron
 type Usuario = {
     user_id: number;
     user_name: string;
@@ -20,6 +21,7 @@ type EliminarUsuarioResponse = {
     message?: string;
 };
 
+ // Componente principal para la gestión de usuarios
 const AdminUsers: React.FC = () => {
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
     const [cargando, setCargando] = useState<boolean>(true);
@@ -27,6 +29,7 @@ const AdminUsers: React.FC = () => {
     const [mensaje, setMensaje] = useState<string>('');
     const [busqueda, setBusqueda] = useState<string>('');
 
+    // Función para cargar los usuarios desde el backend
     const cargarUsuarios = async () => {
         if (!window.electron || !window.electron.ObtenerUsuariosExceptoAdmin) {
             setError('Funcionalidad no disponible.');
@@ -53,7 +56,7 @@ const AdminUsers: React.FC = () => {
             setCargando(false);
         }
     };
-
+// Función para eliminar un usuario
     const eliminarUsuario = async (userId: number) => {
         const confirmar = window.confirm('¿Estás seguro de que deseas eliminar este usuario?');
         if (!confirmar) return;
@@ -67,7 +70,8 @@ const AdminUsers: React.FC = () => {
             const res = (await window.electron.eliminarUsuario(userId)) as EliminarUsuarioResponse;
 
             if (res.success) {
-                setMensaje('Usuario eliminado correctamente');
+                toast.success('Usuario eliminado correctamente');
+                <Toaster/>
                 setError('');
                 cargarUsuarios();
             } else {
@@ -83,7 +87,7 @@ const AdminUsers: React.FC = () => {
     useEffect(() => {
         cargarUsuarios();
     }, []);
-
+// Filtrar usuarios según la búsqueda
     const usuariosFiltrados = usuarios.filter((usuario) => {
         const textoBusqueda = busqueda.toLowerCase();
         return (
@@ -117,7 +121,7 @@ const AdminUsers: React.FC = () => {
         link.click();
         document.body.removeChild(link);
     };
-
+// Renderizado del componente
     return (
         <div className="admin-users-container">
             <h2 className="admin-users-title">Gestión de Usuarios</h2>

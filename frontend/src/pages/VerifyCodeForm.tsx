@@ -1,23 +1,23 @@
-// VerifyCodeForm.tsx
 import React, { useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import '../styles/VerifyCodeForm.css';
-import VantaBackground from "../components/Effects/VantaBackground"; 
+import VantaBackground from "./Effects/VantaBackground"; 
 export default function VerifyCodeForm() {
   const location = useLocation();
   const navigate = useNavigate();
-  const userGmail = location.state?.userGmail ?? ''; //  viene del registro
+  const userGmail = location.state?.userGmail ?? ''; 
 
   const [codigo, setCodigo] = useState('');
   const [message, setMessage] = useState('');
 
+  // Validación del código de verificación
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const response = await window.electron.verificarCodigo({ userGmail, codigo });
       if (response.success) {
         alert('Verificación exitosa. Ahora puedes iniciar sesión.');
-        navigate('/'); // redirige al login
+        navigate('/LoginForm'); // redirige al login
       } else {
         setMessage(response.message);
       }

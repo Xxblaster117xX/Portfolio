@@ -3,18 +3,18 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast'; //  Importa Toaster
 
-import MainPage from './components/MainPage';
-import LoginForm from './components/LoginForm';
-import RegisterForm from './components/RegisterForm';
-import VerifyCodeForm from './components/VerifyCodeForm';
-import MainLayout from './components/MainLayout';
-import Reagents from './components/ReagentManager';
-import RutaPrivada from './components/RutaPrivada';
-import Movement from './components/Movement';
-import Historical from './components/Historical';
-import AdminUsers from './components/AdminUsers';
-import IntroduceEmail from './components/IntroduceEmail';
-import NewPassword from './components/NewPassword';
+import MainPage from './pages/MainPage';
+import LoginForm from './pages/LoginForm';
+import RegisterForm from './pages/RegisterForm';
+import VerifyCodeForm from './pages/VerifyCodeForm';
+import MainLayout from './pages/MainLayout';
+import Reagents from './pages/ReagentManager';
+import RutaPrivada from './pages/RutaPrivada';
+import Movement from './pages/Movement';
+import Historical from './pages/Historical';
+import AdminUsers from './pages/AdminUsers';
+import IntroduceEmail from './pages/IntroduceEmail';
+import NewPassword from './pages/NewPassword';
 function App() {
   return (
     <Router>
