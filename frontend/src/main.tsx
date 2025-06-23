@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast'; //  Importa Toaster
+import { Toaster } from 'react-hot-toast';
 
 import MainPage from './pages/MainPage';
 import LoginForm from './pages/LoginForm';

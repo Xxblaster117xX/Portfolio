@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "concurrently \"npm run dev:react\" \"npm run dev:electron\"",
     "dev:react": "vite",
-    "dev:electron": "wait-on http://localhost:5173 && electron .",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
