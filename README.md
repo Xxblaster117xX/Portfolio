@@ -68,5 +68,5 @@ database.ts: Conexión a SQLite e implementación de queries
 Durante este proyecto, se ha trabajado la arquitectura en capas con separación de responsabilidades, el uso de Electron para crear la aplicación de escritorio, la integración de frontend moderno con React y la manipulación local de datos con SQLite.
 
 
-Para terminar explicar que la aplicación no es la mejor pero es la primera vez utilizando estas tecnologías y se me ocurren muchas mejoras que implementar
-Seguiré actualizando el repositorio con más proyectos
+Para terminar explicar que a la aplicación le falta por pulir pero estoy realizando algunos proyectos personales primeramente que subiré y se me ocurren muchas mejoras que implementar.
+Seguiré actualizando el repositorio con más proyectos.
