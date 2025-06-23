@@ -21,3 +21,8 @@ Thumbs.db
 # Ignorar configuraciones de IDEs
 .vscode/
 .idea/
+
+node_modules/
+dist/
+*.zip
+*.mp4
