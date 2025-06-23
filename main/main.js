@@ -54,7 +54,7 @@ const gotTheLock = app.requestSingleInstanceLock();
 
 
 app.whenReady().then(() => {
-  crearServidorAPI(); // <-- Inicia el servidor Express
+  crearServidorAPI();
   createMainWindow();
 });
 
@@ -67,7 +67,7 @@ app.on('activate', () => {
 });
 
 
-// Removed duplicate declaration of gotTheLock and merged logic
+
 app.whenReady().then(async () => {
   createMainWindow();
 });
