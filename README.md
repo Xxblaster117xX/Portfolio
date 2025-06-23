@@ -44,7 +44,7 @@ Almacenamiento local con SQLite
 
 🖥️ ¿Cómo ejecutar?
 1. Clona el repositorio
-git clone https://github.com/tuusuario/quimisan.git
+git clone https://github.com/Xxblaster_117xX/Quimisan.git
 cd reactivos-app
 2. Instala las dependencias
 npm install
