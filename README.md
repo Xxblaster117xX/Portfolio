@@ -69,3 +69,4 @@ Durante este proyecto, se ha trabajado la arquitectura en capas con separación 
 
 
 Para terminar explicar que la aplicación no es la mejor pero es la primera vez utilizando estas tecnologías y se me ocurren muchas mejoras que implementar
+Seguiré actualizando el repositorio con más proyectos
