@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/LoginForm.css';
-
+import VantaBackground from "../components/Effects/VantaGlobe"; // importa el fondo animado
 export default function LoginForm() {
   const [userGmail, setUserGmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
@@ -19,6 +19,8 @@ type RespuestaLogin = {
   message: string;
   user?: Usuario;
 };
+
+
 
   const handleLogin = async (e: React.FormEvent) => {
   e.preventDefault();
@@ -44,10 +46,11 @@ type RespuestaLogin = {
 
 
   const handleRecoverPassword = () => {
-    alert('Funcionalidad de recuperación de contraseña aún no implementada.');
+    navigate('/IntroduceEmail');
   };
 
   return (
+<><VantaBackground/>
     <div className="login-container">
       <form onSubmit={handleLogin} className="login-form">
         <h1 className="login-title">Iniciar Sesión</h1>
@@ -87,5 +90,6 @@ type RespuestaLogin = {
         </button>
       </form>
     </div>
+    </>
   );
 }

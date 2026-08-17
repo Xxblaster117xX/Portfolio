@@ -7,7 +7,6 @@ console.log("=== CONFIGURACIÓN DE CORREO ===");
 console.log("CORREO_ORIGEN:", process.env.CORREO_ORIGEN);
 console.log("CORREO_PASSWORD:", process.env.CORREO_PASSWORD ? "CARGADA" : "NO CARGADA");
 console.log("================================");
-console.log('process.env: ', process.env)
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {

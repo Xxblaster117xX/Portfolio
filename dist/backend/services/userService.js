@@ -24,7 +24,6 @@ class UserService {
         `UPDATE users SET isVerified = ? WHERE user_gmail = ?`,
         [true, userGmail]
       );
-
       if (result.changes === 0) {
         throw new Error('No se encontró el usuario para verificar.');
       }
@@ -80,7 +79,7 @@ class UserService {
     }
   }
 
-  static async actualizarContraseña(userId, nuevaContraseña) {
+  static async actualizarContrasena(userGmail, nuevaContraseña) {
     try {
       if (!this.verificarContraseñaFuerte(nuevaContraseña)) {
         throw new Error('La contraseña debe tener al menos 8 caracteres, incluir una letra, un número y un carácter especial.');
@@ -88,8 +87,8 @@ class UserService {
 
       const hashedPassword = await this.encriptarContraseña(nuevaContraseña);
       const result = await db.run(
-        `UPDATE users SET user_password = ? WHERE user_id = ?`,
-        [hashedPassword, userId]
+        `UPDATE users SET user_password = ? WHERE user_gmail = ?`,
+        [hashedPassword, userGmail]
       );
 
       if (result.changes === 0) {
@@ -135,7 +134,7 @@ class UserService {
     }
   }
 
-  // NUEVO: Verifica si el usuario existe y está verificado
+  
   static async existeUsuarioVerificado(userGmail) {
     const usuario = await this.obtenerUsuarioPorGmail(userGmail);
     return !!usuario && usuario.isVerified;

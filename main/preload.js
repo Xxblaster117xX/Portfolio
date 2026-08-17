@@ -45,4 +45,10 @@ contextBridge.exposeInMainWorld('electron', {
   // Historial
   registrarHistorial: (data) => ipcRenderer.invoke('registrar-historial', data),
   obtenerHistorial: () => ipcRenderer.invoke('obtener-historial'),
+
+  // Usuarios
+  obtenerUsuarios: () => ipcRenderer.invoke('obtener-usuarios'),
+  eliminarUsuario: (userId) => ipcRenderer.invoke('eliminar-usuario', userId),
+  verificarCorreoExiste: (correo) => ipcRenderer.invoke('verificarCorreoExiste', correo),
+  actualizarContrasena: (userGmail, nuevaContraseña) => ipcRenderer.invoke('actualizar-contrasena', { userGmail, nuevaContraseña }),
 });

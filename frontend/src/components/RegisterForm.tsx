@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/RegisterForm.css';
-
+import VantaBackground from "../components/Effects/VantaBackground"; // importa el fondo animado
 export default function RegisterForm() {
   const [userName, setUserName] = useState('');
   const [userGmail, setUserGmail] = useState('');
@@ -57,6 +57,10 @@ export default function RegisterForm() {
   };
 
   return (
+
+<>
+    <VantaBackground />
+
     <div className="register-container">
       <form onSubmit={handleRegister} className="register-form">
         <h1 className="form-title">Registro</h1>
@@ -106,5 +110,7 @@ export default function RegisterForm() {
       {message && <p className="form-message">{message}</p>}
       <Link to="/" className="home-button">← Volver al inicio</Link>
     </div>
+    </>
   );
+  
 }
