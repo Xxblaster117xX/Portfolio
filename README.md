@@ -33,8 +33,8 @@ Construida con **Electron + React + TypeScript**, con persistencia en **SQLite**
 ### Instalación
 
 ```bash
-git clone https://github.com/Xxblaster117xX/Quimisan.git
-cd Quimisan
+git clone https://github.com/Xxblaster117xX/Portfolio.git
+cd Portfolio
 npm install
 cd frontend && npm install && cd ..
 ```
