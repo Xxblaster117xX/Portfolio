@@ -128,6 +128,9 @@ export default function ReagentManager() {
   }, []);
 
   return (
+    <>   
+    
+
     <div className="reagent-container">
       <div className="tabs">
         <button
@@ -182,5 +185,6 @@ export default function ReagentManager() {
         </div>
       )}
     </div>
+     </>
   );
 }

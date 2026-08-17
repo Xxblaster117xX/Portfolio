@@ -18,13 +18,16 @@
     "nodemailer": "^6.10.1",
     "react-modal": "^3.16.3",
     "sqlite": "^5.1.1",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "three": "^0.176.0",
+    "vanta": "^0.5.24"
   },
   "devDependencies": {
     "@electron/rebuild": "^3.7.2",
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^22.15.2",
     "@types/nodemailer": "^6.4.17",
+    "@types/three": "^0.176.0",
     "concurrently": "^8.2.2",
     "electron": "^36.1.0",
     "electron-builder": "^24.6.0",
