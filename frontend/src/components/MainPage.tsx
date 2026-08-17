@@ -12,7 +12,6 @@ export default function MainPage() {
     <>
       {/* Fondo animado fijo detrás */}
       <VantaGlobe />
-
       {/* Contenido encima del fondo */}
       <motion.div
         className="app-background"

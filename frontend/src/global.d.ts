@@ -1,9 +1,15 @@
 
 import { Reagents } from '../interface/IReagents';
+import { IUser } from '../interface/IUser';
 declare global {
   interface Window {
     electron: {
-      registrarUsuario: (data: { 
+      //Usuario
+      obtenerUsuarios(): Promise<{ success: boolean; data: IUser[]; message?: string }>;
+      verificarCorreoExiste: (userGmail: string) => Promise<{ exists: boolean }>;
+      actualizarContrasena: (userGmail: string, nuevaContraseña: string) => Promise<{ success: boolean; message: string }>;
+      eliminarUsuario(userId: number): Promise<{ success: boolean; message?: string }>;
+      registrarUsuario: (data: {
         userName: string; 
         userGmail: string; 
         userPassword: string; 
